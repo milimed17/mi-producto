@@ -326,7 +326,7 @@ textarea{min-height:80px}
       <div id="gap-preguntas" style="font-size:0.88rem;color:var(--text);margin-bottom:0.75rem;line-height:1.6"></div>
       <textarea id="gap-respuesta" placeholder="Si tienes algo relevante que agregar, escríbelo aquí..." style="min-height:80px"></textarea>
       <div style="margin-top:0.75rem;display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
-        <button class="btn-primary" onclick="recalcularCompatibilidad()" style="background:var(--gold)">
+        <button class="btn-primary" id="btn-recalc" onclick="recalcularCompatibilidad()" style="background:var(--gold)">
           <span class="spinner" id="spinner-recalc" style="display:none">⟳</span>
           ↑ Recalcular compatibilidad con esta info
         </button>
@@ -522,7 +522,7 @@ function agregarExperiencia(){
 async function recalcularCompatibilidad(){
   const gapExtra=val('gap-respuesta').trim();
   if(!gapExtra){alert('Escribe primero la información adicional que quieres agregar.');return;}
-  const btn=document.querySelector('[onclick="recalcularCompatibilidad()"]');
+  const btn=document.getElementById('btn-recalc');
   const bar=document.getElementById('loading-recalc');
   const ai=document.getElementById('ai-recalc');
   btn.disabled=true;document.getElementById('spinner-recalc').style.display='inline-block';
