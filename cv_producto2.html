@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El CV que sí abre puertas</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+:root{--navy:#1a1f3a;--gold:#c9a84c;--cream:#f7f4ef;--sage:#7a9e8e;--text:#2d2d2d;--muted:#6b7280;--border:#e5e0d8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh}
+nav{background:var(--navy);padding:1rem 2rem}
+.logo{color:var(--gold);font-family:'Fraunces',serif;font-size:1rem;font-weight:300}
+.subtitle{color:rgba(255,255,255,0.5);font-size:0.8rem}
+.progress-bar{background:var(--navy);padding:0 2rem 1rem;display:flex;gap:0.5rem;align-items:center}
+.step-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);transition:all 0.3s}
+.step-dot.active{background:var(--gold);width:24px;border-radius:4px}
+.step-dot.done{background:var(--sage)}
+.section{display:none;max-width:760px;margin:0 auto;padding:3rem 2rem;animation:fadeIn 0.4s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.section-label{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
+h1{font-family:'Fraunces',serif;font-size:2.2rem;font-weight:300;color:var(--navy);line-height:1.2;margin-bottom:1rem}
+h2{font-family:'Fraunces',serif;font-size:1.4rem;font-weight:300;color:var(--navy);margin-bottom:0.5rem}
+.lead{color:var(--muted);font-size:1rem;line-height:1.6;margin-bottom:2rem}
+.card{background:white;border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.2rem}
+.card-label{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem}
+input[type=text],textarea{width:100%;padding:0.75rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.95rem;color:var(--text);background:white;transition:border-color 0.2s;resize:vertical}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--navy)}
+textarea{min-height:80px}
+.field-group{margin-bottom:1rem}
+.field-label{display:block;font-size:0.85rem;font-weight:500;color:var(--navy);margin-bottom:0.4rem}
+.field-hint{font-size:0.78rem;color:var(--muted);margin-top:0.3rem}
+.exp-block{background:white;border:1.5px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1rem}
+.exp-block h3{font-size:0.85rem;font-weight:500;color:var(--navy);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border)}
+.btn-primary{background:var(--navy);color:white;border:none;padding:0.85rem 2rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:500;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:0.5rem}
+.btn-primary:hover{background:#252c52;transform:translateY(-1px)}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.btn-secondary{background:transparent;color:var(--navy);border:1.5px solid var(--navy);padding:0.75rem 1.5rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.9rem;cursor:pointer;transition:all 0.2s}
+.btn-secondary:hover{background:var(--navy);color:white}
+.btn-gold{background:var(--gold);color:white;border:none;padding:0.85rem 2rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:500;cursor:pointer;transition:all 0.2s}
+.btn-gold:hover{background:#b8943d}
+.btn-row{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.5rem}
+
+/* CHOICE CARDS */
+.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem}
+.choice-card{border:2px solid var(--border);border-radius:14px;padding:2rem 1.5rem;cursor:pointer;transition:all 0.2s;text-align:center;background:white}
+.choice-card:hover{border-color:var(--navy);transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,0.08)}
+.choice-card.selected{border-color:var(--gold);background:#fdf8ef}
+.choice-card .icon{font-size:2.5rem;margin-bottom:1rem}
+.choice-card h3{font-size:1rem;font-weight:500;color:var(--navy);margin-bottom:0.4rem}
+.choice-card p{font-size:0.82rem;color:var(--muted);line-height:1.4}
+
+/* FILE UPLOAD */
+.upload-area{border:2px dashed var(--border);border-radius:12px;padding:2.5rem;text-align:center;cursor:pointer;transition:all 0.2s;background:white;margin-bottom:1rem}
+.upload-area:hover{border-color:var(--gold);background:#fdf8ef}
+.upload-area.has-file{border-color:var(--sage);background:#f0f7f4}
+.upload-icon{font-size:2.5rem;margin-bottom:0.75rem}
+.upload-text{font-size:0.9rem;color:var(--muted)}
+.upload-text strong{color:var(--navy)}
+.upload-filename{font-size:0.85rem;color:var(--sage);font-weight:500;margin-top:0.5rem}
+#file-input{display:none}
+
+.ai-response{background:#f0f4ff;border:1px solid #d0d9ff;border-radius:10px;padding:1.2rem;margin-top:1rem;font-size:0.9rem;line-height:1.6;color:var(--text);display:none}
+.ai-response.visible{display:block;animation:fadeIn 0.3s ease}
+.ai-label{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.5rem;font-weight:500}
+
+.ats-choice{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem}
+.ats-option{border:2px solid var(--border);border-radius:12px;padding:1.5rem;cursor:pointer;transition:all 0.2s;text-align:center;background:white}
+.ats-option:hover{border-color:var(--navy)}
+.ats-option.selected{border-color:var(--gold);background:#fdf8ef}
+.ats-option .icon{font-size:2rem;margin-bottom:0.75rem}
+.ats-option h3{font-size:0.95rem;font-weight:500;color:var(--navy);margin-bottom:0.5rem}
+.ats-option p{font-size:0.8rem;color:var(--muted);line-height:1.4}
+.ats-badge{display:inline-block;font-size:0.65rem;padding:0.2rem 0.5rem;border-radius:4px;margin-top:0.5rem;font-weight:500}
+.badge-ats{background:#e8f5e9;color:#2e7d32}
+.badge-visual{background:#fff3e0;color:#e65100}
+.info-box{background:#fffbf0;border:1px solid #f0d78c;border-radius:10px;padding:1rem 1.2rem;margin-bottom:1.5rem;font-size:0.85rem;line-height:1.5;color:#5a4a00}
+.info-box strong{color:#3a2f00}
+#cv-preview-container{background:white;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.5rem}
+#cv-ats{font-family:'Georgia',serif;padding:2.5rem;color:#1a1a1a;font-size:11pt;line-height:1.5}
+#cv-ats .cv-name{font-size:20pt;font-weight:bold;margin-bottom:0.2rem}
+#cv-ats .cv-contact{font-size:9.5pt;color:#444;margin-bottom:1.2rem;border-bottom:1.5px solid #1a1a1a;padding-bottom:0.5rem}
+#cv-ats .cv-section-title{font-size:10.5pt;font-weight:bold;text-transform:uppercase;letter-spacing:0.08em;margin:1rem 0 0.4rem;border-bottom:0.5px solid #888;padding-bottom:0.2rem}
+#cv-ats .cv-job-title{font-weight:bold;font-size:10.5pt}
+#cv-ats .cv-company{font-size:10pt;color:#333;margin-bottom:0.3rem}
+#cv-ats ul{padding-left:1.2rem}
+#cv-ats ul li{margin-bottom:0.25rem;font-size:10pt}
+#cv-ats .cv-summary{font-size:10pt;margin-bottom:0.5rem;font-style:italic;color:#333}
+#cv-visual{display:grid;grid-template-columns:200px 1fr;min-height:400px}
+.cv-sidebar{background:var(--navy);color:white;padding:2rem 1.5rem}
+.cv-sidebar .cv-name{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:300;line-height:1.2;margin-bottom:0.5rem}
+.cv-sidebar .cv-title{font-size:0.75rem;color:var(--gold);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.5rem}
+.cv-sidebar .sidebar-section{margin-bottom:1.5rem}
+.cv-sidebar .sidebar-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--gold);margin-bottom:0.5rem}
+.cv-sidebar .sidebar-item{font-size:0.78rem;color:rgba(255,255,255,0.8);margin-bottom:0.3rem}
+.cv-main{padding:2rem}
+.cv-main .section-title{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--gold);margin-bottom:0.75rem;margin-top:1.2rem}
+.cv-main .section-title:first-child{margin-top:0}
+.cv-main .job-title{font-weight:600;font-size:0.9rem;color:var(--navy)}
+.cv-main .company{font-size:0.8rem;color:var(--muted);margin-bottom:0.4rem}
+.cv-main ul{padding-left:1rem}
+.cv-main ul li{font-size:0.82rem;color:var(--text);margin-bottom:0.3rem;line-height:1.4}
+.cv-main .summary{font-size:0.85rem;color:var(--text);line-height:1.5;font-style:italic}
+.loading-bar{height:3px;background:var(--border);border-radius:2px;margin:1rem 0;overflow:hidden;display:none}
+.loading-bar.active{display:block}
+.loading-bar::after{content:'';display:block;height:100%;width:40%;background:var(--gold);animation:slide 1s ease-in-out infinite;border-radius:2px}
+@keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
+.spinner{display:inline-block;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:600px){h1{font-size:1.6rem}.choice-grid,.ats-choice{grid-template-columns:1fr}#cv-visual{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">El CV que sí abre puertas</div>
+  <div class="subtitle">Producto 2 · El Código del Empleo</div>
+</nav>
+<div class="progress-bar">
+  <div class="step-dot active" id="dot-0"></div>
+  <div class="step-dot" id="dot-1"></div>
+  <div class="step-dot" id="dot-2"></div>
+  <div class="step-dot" id="dot-3"></div>
+  <div class="step-dot" id="dot-4"></div>
+</div>
+
+<!-- PASO 0: BIENVENIDA -->
+<div class="section active" id="step-0">
+  <div class="section-label">Producto 2 de 3</div>
+  <h1>El CV que sí<br><em>abre puertas</em></h1>
+  <p class="lead">La mayoría manda el mismo CV a todos los trabajos y describe funciones en vez de logros. Aquí vas a construir un CV adaptado al cargo que buscas — y aprenderás a elegir el formato correcto según la empresa.</p>
+  <div class="card">
+    <div class="card-label">¿Por dónde empezamos?</div>
+    <div class="choice-grid">
+      <div class="choice-card" onclick="elegirRuta('upload')">
+        <div class="icon">📄</div>
+        <h3>Ya tengo un CV</h3>
+        <p>Súbelo y la IA lo mejora y adapta al cargo que buscas</p>
+      </div>
+      <div class="choice-card" onclick="elegirRuta('manual')">
+        <div class="icon">✏️</div>
+        <h3>Empiezo desde cero</h3>
+        <p>Te guío paso a paso para construir tu CV desde tus experiencias</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PASO 1A: SUBIR CV -->
+<div class="section" id="step-1a">
+  <div class="section-label">Paso 1 de 3 — Con CV existente</div>
+  <h2>Sube tu CV actual</h2>
+  <p class="lead" style="margin-bottom:1.5rem">La IA va a leer tu CV, extraer tu información y adaptarla al cargo que buscas. Solo necesitas decirle a qué cargo estás aplicando.</p>
+
+  <div class="upload-area" id="upload-area" onclick="document.getElementById('file-input').click()">
+    <div class="upload-icon">📎</div>
+    <div class="upload-text"><strong>Haz clic para subir tu CV</strong></div>
+    <div class="upload-text">PDF o Word (.docx) · Máximo 5MB</div>
+    <div class="upload-filename" id="upload-filename"></div>
+  </div>
+  <input type="file" id="file-input" accept=".pdf,.doc,.docx" onchange="archivoSeleccionado(this)">
+
+  <div class="card">
+    <div class="field-group">
+      <label class="field-label">¿A qué cargo estás aplicando?</label>
+      <input type="text" id="cargo-upload" placeholder="Ej: Coordinadora de Logística, Analista de RRHH...">
+      <div class="field-hint">La IA usará este cargo para adaptar el lenguaje de tu CV.</div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">¿Qué industria o tipo de empresa?</label>
+      <input type="text" id="industria-upload" placeholder="Ej: Retail, Salud, Tecnología...">
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-secondary" onclick="goTo(0)">← Volver</button>
+    <button class="btn-primary" id="btn-procesar-cv" onclick="procesarCVSubido()">
+      <span class="spinner" id="spinner-upload" style="display:none">⟳</span>
+      Mejorar mi CV con IA →
+    </button>
+  </div>
+  <div class="loading-bar" id="loading-upload"></div>
+  <div class="ai-response" id="ai-upload"></div>
+</div>
+
+<!-- PASO 1B: DESDE CERO — datos -->
+<div class="section" id="step-1b">
+  <div class="section-label">Paso 1 de 4 — Desde cero</div>
+  <h2>Tus datos y el cargo que buscas</h2>
+  <p class="lead" style="margin-bottom:1.5rem">Esta información se guarda automáticamente — no tendrás que escribirla de nuevo.</p>
+  <div class="card">
+    <div class="field-group"><label class="field-label">Nombre completo</label><input type="text" id="nombre" placeholder="Tu nombre completo"></div>
+    <div class="field-group"><label class="field-label">Email personal</label><input type="text" id="email" placeholder="tucorreo@gmail.com"></div>
+    <div class="field-group"><label class="field-label">Teléfono</label><input type="text" id="telefono" placeholder="+56 9 1234 5678"></div>
+    <div class="field-group"><label class="field-label">LinkedIn (opcional)</label><input type="text" id="linkedin" placeholder="linkedin.com/in/tunombre"></div>
+  </div>
+  <div class="card">
+    <div class="field-group">
+      <label class="field-label">¿A qué cargo estás aplicando?</label>
+      <input type="text" id="cargo-objetivo" placeholder="Ej: Coordinadora de Logística, Analista de RRHH...">
+      <div class="field-hint">La IA usará este cargo para adaptar todo tu CV.</div>
+    </div>
+    <div class="field-group"><label class="field-label">¿Qué industria o tipo de empresa?</label><input type="text" id="industria" placeholder="Ej: Retail, Salud, Tecnología..."></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-secondary" onclick="goTo(0)">← Volver</button>
+    <button class="btn-primary" onclick="validarPaso1()">Continuar →</button>
+  </div>
+</div>
+
+<!-- PASO 2: EXPERIENCIAS (solo ruta manual) -->
+<div class="section" id="step-2">
+  <div class="section-label">Paso 2 de 4</div>
+  <h2>Tus experiencias laborales</h2>
+  <p class="lead" style="margin-bottom:1.5rem">No necesitas escribir tu CV — solo cuéntame qué hacías. La IA lo transforma en logros con impacto.</p>
+  <div id="experiencias-container">
+    <div class="exp-block" id="exp-0">
+      <h3>Experiencia 1 <span style="color:var(--muted);font-weight:300">(la más reciente)</span></h3>
+      <div class="field-group"><label class="field-label">Cargo que tenías</label><input type="text" class="exp-cargo" placeholder="Ej: Asistente de Logística"></div>
+      <div class="field-group"><label class="field-label">Empresa</label><input type="text" class="exp-empresa" placeholder="Ej: Falabella"></div>
+      <div class="field-group"><label class="field-label">Período</label><input type="text" class="exp-periodo" placeholder="Ej: 2021 – 2024"></div>
+      <div class="field-group">
+        <label class="field-label">¿Qué hacías en ese trabajo? Cuéntamelo con tus palabras</label>
+        <textarea class="exp-descripcion" placeholder="Ej: Coordinaba los despachos con proveedores, usaba Excel para controlar el inventario, armaba reportes semanales..."></textarea>
+        <div class="field-hint">No te preocupes si suena simple — la IA lo convierte en logros profesionales.</div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">¿Hubo algo que mejoró gracias a ti? (opcional)</label>
+        <textarea class="exp-logro" placeholder="Ej: Reduje errores en pedidos, organicé un sistema que antes no existía..."></textarea>
+      </div>
+    </div>
+  </div>
+  <button class="btn-secondary" onclick="agregarExperiencia()" style="margin-bottom:1rem">+ Agregar otra experiencia</button>
+  <div class="card">
+    <div class="field-group"><label class="field-label">Educación</label><input type="text" id="educacion" placeholder="Ej: Técnico en Administración – INACAP, 2018"></div>
+    <div class="field-group"><label class="field-label">Herramientas o habilidades técnicas</label><input type="text" id="habilidades" placeholder="Ej: Excel avanzado, SAP, Power BI..."></div>
+    <div class="field-group"><label class="field-label">Idiomas</label><input type="text" id="idiomas" placeholder="Ej: Español nativo, Inglés intermedio"></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-secondary" onclick="goTo('1b')">← Volver</button>
+    <button class="btn-primary" id="btn-generar" onclick="generarCV()">
+      <span class="spinner" id="spinner" style="display:none">⟳</span>
+      Generar mi CV con IA →
+    </button>
+  </div>
+  <div class="loading-bar" id="loading-bar"></div>
+  <div class="ai-response" id="ai-procesando"></div>
+</div>
+
+<!-- PASO 3: FORMATO -->
+<div class="section" id="step-3">
+  <div class="section-label">Elige el formato</div>
+  <h2>¿Para qué tipo de empresa vas a aplicar?</h2>
+  <div class="info-box">
+    💡 <strong>¿Sabías esto?</strong> Las empresas grandes usan sistemas automáticos llamados <strong>ATS (Applicant Tracking System)</strong> — en español, <em>Sistema de Seguimiento de Candidatos</em>. Este programa lee tu CV <strong>antes que cualquier persona</strong>. Si tu CV tiene columnas, colores o íconos, el ATS puede filtrarte sin que nadie te haya visto. Para esas empresas, un CV simple funciona mejor.
+  </div>
+  <div class="ats-choice">
+    <div class="ats-option" id="opt-ats" onclick="selectFormat('ats')">
+      <div class="icon">🏢</div>
+      <h3>Empresa grande o corporativa</h3>
+      <p>Multinacionales, bancos, retail grande, gobierno, salud institucional</p>
+      <span class="ats-badge badge-ats">✓ Optimizado para ATS</span>
+    </div>
+    <div class="ats-option" id="opt-visual" onclick="selectFormat('visual')">
+      <div class="icon">✨</div>
+      <h3>Empresa mediana, startup o envío directo</h3>
+      <p>PYMEs, startups, agencias, envío por email o LinkedIn</p>
+      <span class="ats-badge badge-visual">Diseño visual atractivo</span>
+    </div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-secondary" id="btn-volver-formato" onclick="volverDesdeFormato()">← Volver</button>
+    <button class="btn-primary" id="btn-ver-cv" onclick="verCV()" disabled>Ver mi CV →</button>
+  </div>
+</div>
+
+<!-- PASO 4: CV FINAL -->
+<div class="section" id="step-4">
+  <div class="section-label">Tu CV está listo</div>
+  <h2 id="cv-titulo">CV listo para usar</h2>
+  <p class="lead" style="margin-bottom:1.5rem" id="cv-subtitulo">Revísalo y descárgalo.</p>
+  <div id="cv-preview-container">
+    <div id="cv-ats"></div>
+    <div id="cv-visual" style="display:none"></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-gold" onclick="descargarPDF()">⬇ Descargar PDF</button>
+    <button class="btn-secondary" onclick="goTo(3)">← Cambiar formato</button>
+    <button class="btn-secondary" onclick="nuevoCV()">Generar CV para otro cargo</button>
+  </div>
+</div>
+
+<script>
+let currentStep='0', cvData=null, selectedFormat=null, expCount=1, rutaElegida=null, cvUploadData=null;
+
+window.addEventListener('load',()=>{
+  const saved=localStorage.getItem('cv_data_p2');
+  if(!saved)return;
+  const d=JSON.parse(saved);
+  ['nombre','email','telefono','linkedin','educacion','habilidades','idiomas'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&d[id])el.value=d[id];
+  });
+  if(d.experiencias&&d.experiencias[0]){
+    const e=d.experiencias[0],b=document.getElementById('exp-0');
+    b.querySelector('.exp-cargo').value=e.cargo||'';
+    b.querySelector('.exp-empresa').value=e.empresa||'';
+    b.querySelector('.exp-periodo').value=e.periodo||'';
+    b.querySelector('.exp-descripcion').value=e.descripcion||'';
+    b.querySelector('.exp-logro').value=e.logro||'';
+  }
+});
+
+function saveData(){
+  const data={nombre:document.getElementById('nombre').value,email:document.getElementById('email').value,telefono:document.getElementById('telefono').value,linkedin:document.getElementById('linkedin').value,educacion:document.getElementById('educacion').value,habilidades:document.getElementById('habilidades').value,idiomas:document.getElementById('idiomas').value,experiencias:getExperiencias()};
+  localStorage.setItem('cv_data_p2',JSON.stringify(data));
+}
+
+function getExperiencias(){
+  return Array.from(document.querySelectorAll('.exp-block')).map(b=>({cargo:b.querySelector('.exp-cargo').value,empresa:b.querySelector('.exp-empresa').value,periodo:b.querySelector('.exp-periodo').value,descripcion:b.querySelector('.exp-descripcion').value,logro:b.querySelector('.exp-logro').value}));
+}
+
+function goTo(step){
+  const prev=document.getElementById('step-'+currentStep);
+  const prevDot=document.getElementById('dot-'+currentStep.toString().replace(/[ab]/,''));
+  if(prev){prev.classList.remove('active');}
+  if(prevDot){prevDot.classList.remove('active');prevDot.classList.add('done');}
+  currentStep=step.toString();
+  const curr=document.getElementById('step-'+currentStep);
+  const currDotId='dot-'+currentStep.replace(/[ab]/,'');
+  const currDot=document.getElementById(currDotId);
+  if(curr)curr.classList.add('active');
+  if(currDot){currDot.classList.remove('done');currDot.classList.add('active');}
+  window.scrollTo(0,0);
+}
+
+function elegirRuta(ruta){
+  rutaElegida=ruta;
+  goTo(ruta==='upload'?'1a':'1b');
+}
+
+function archivoSeleccionado(input){
+  const file=input.files[0];
+  if(!file)return;
+  const area=document.getElementById('upload-area');
+  const fn=document.getElementById('upload-filename');
+  area.classList.add('has-file');
+  fn.textContent='✓ '+file.name;
+  cvUploadData=file;
+}
+
+async function procesarCVSubido(){
+  const cargo=document.getElementById('cargo-upload').value.trim();
+  if(!cvUploadData){alert('Por favor sube tu CV primero.');return;}
+  if(!cargo){alert('Por favor indica el cargo al que estás aplicando.');return;}
+
+  const btn=document.getElementById('btn-procesar-cv');
+  const spinner=document.getElementById('spinner-upload');
+  const bar=document.getElementById('loading-upload');
+  const ai=document.getElementById('ai-upload');
+  btn.disabled=true;spinner.style.display='inline-block';bar.classList.add('active');
+  ai.innerHTML='<div class="ai-label">Procesando</div>Leyendo tu CV y adaptándolo al cargo...';
+  ai.classList.add('visible');
+
+  try{
+    const base64=await fileToBase64(cvUploadData);
+    const industria=document.getElementById('industria-upload').value;
+    const ispdf=cvUploadData.type==='application/pdf';
+    
+    let messages;
+    if(ispdf){
+      messages=[{role:'user',content:[{type:'document',source:{type:'base64',media_type:'application/pdf',data:base64}},{type:'text',text:`Eres experto en RRHH. El usuario quiere aplicar al cargo: "${cargo}" en la industria: "${industria}". Lee este CV y responde SOLO en JSON sin markdown:\n{"nombre":"","email":"","telefono":"","linkedin":"","resumen":"resumen adaptado al cargo en 2-3 líneas","experiencias":[{"cargo":"","empresa":"","periodo":"","bullets":["logro adaptado 1","logro adaptado 2","logro adaptado 3"]}],"educacion":"","habilidades":"","idiomas":""}\nTransforma las descripciones en bullets de logros con impacto y verbos de acción, adaptados al cargo "${cargo}".`}]}];
+    }else{
+      const text=await fileToText(cvUploadData);
+      messages=[{role:'user',content:`Eres experto en RRHH. El usuario quiere aplicar al cargo: "${cargo}" en la industria: "${industria}".\n\nContenido del CV:\n${text}\n\nResponde SOLO en JSON sin markdown:\n{"nombre":"","email":"","telefono":"","linkedin":"","resumen":"resumen adaptado al cargo en 2-3 líneas","experiencias":[{"cargo":"","empresa":"","periodo":"","bullets":["logro 1","logro 2","logro 3"]}],"educacion":"","habilidades":"","idiomas":""}\nTransforma las descripciones en bullets de logros con impacto y verbos de acción, adaptados al cargo "${cargo}".`}];
+    }
+
+    const res=await fetch('/.netlify/functions/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:2000,messages})});
+    const data=await res.json();
+    const text2=data.content.map(c=>c.text||'').join('');
+    cvData=JSON.parse(text2.replace(/```json|```/g,'').trim());
+
+    // Rellenar campos ocultos para el render
+    if(cvData.nombre)document.getElementById('nombre').value=cvData.nombre;
+    if(cvData.email)document.getElementById('email').value=cvData.email;
+    if(cvData.telefono)document.getElementById('telefono').value=cvData.telefono;
+    if(cvData.linkedin)document.getElementById('linkedin').value=cvData.linkedin;
+    if(cvData.educacion)document.getElementById('educacion').value=cvData.educacion;
+    if(cvData.habilidades)document.getElementById('habilidades').value=cvData.habilidades;
+    if(cvData.idiomas)document.getElementById('idiomas').value=cvData.idiomas;
+    document.getElementById('cargo-objetivo').value=cargo;
+    document.getElementById('industria').value=industria;
+
+    ai.innerHTML='<div class="ai-label">✓ Listo</div>Tu CV fue procesado. Ahora elige el formato.';
+    setTimeout(()=>goTo(3),800);
+  }catch(err){
+    ai.innerHTML='<div class="ai-label" style="color:red">Error</div>Hubo un problema leyendo el archivo. Intenta de nuevo.';
+    console.error(err);
+  }finally{
+    btn.disabled=false;spinner.style.display='none';bar.classList.remove('active');
+  }
+}
+
+function fileToBase64(file){
+  return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file);});
+}
+
+function fileToText(file){
+  return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsText(file);});
+}
+
+function validarPaso1(){
+  if(!document.getElementById('nombre').value.trim()||!document.getElementById('cargo-objetivo').value.trim()){alert('Por favor completa tu nombre y el cargo al que estás aplicando.');return;}
+  saveData();goTo(2);
+}
+
+function agregarExperiencia(){
+  const c=document.getElementById('experiencias-container');
+  const d=document.createElement('div');
+  d.className='exp-block';d.id='exp-'+expCount;
+  d.innerHTML=`<h3>Experiencia ${expCount+1}</h3><div class="field-group"><label class="field-label">Cargo que tenías</label><input type="text" class="exp-cargo" placeholder="Ej: Vendedor"></div><div class="field-group"><label class="field-label">Empresa</label><input type="text" class="exp-empresa" placeholder="Ej: Ripley"></div><div class="field-group"><label class="field-label">Período</label><input type="text" class="exp-periodo" placeholder="Ej: 2018 – 2021"></div><div class="field-group"><label class="field-label">¿Qué hacías en ese trabajo?</label><textarea class="exp-descripcion" placeholder="Cuéntamelo con tus palabras..."></textarea></div><div class="field-group"><label class="field-label">¿Hubo algo que mejoró gracias a ti? (opcional)</label><textarea class="exp-logro" placeholder="Logros o cambios que generaste..."></textarea></div>`;
+  c.appendChild(d);expCount++;
+}
+
+async function generarCV(){
+  const cargo=document.getElementById('cargo-objetivo').value.trim();
+  const exps=getExperiencias();
+  if(!exps[0].cargo||!exps[0].descripcion){alert('Completa al menos el cargo y descripción de tu primera experiencia.');return;}
+  saveData();
+  const btn=document.getElementById('btn-generar'),spinner=document.getElementById('spinner'),bar=document.getElementById('loading-bar'),ai=document.getElementById('ai-procesando');
+  btn.disabled=true;spinner.style.display='inline-block';bar.classList.add('active');
+  ai.innerHTML='<div class="ai-label">Procesando</div>La IA está transformando tu experiencia en logros adaptados al cargo...';
+  ai.classList.add('visible');
+  const expTexto=exps.map((e,i)=>`Experiencia ${i+1}:\n- Cargo: ${e.cargo}\n- Empresa: ${e.empresa}\n- Período: ${e.periodo}\n- Descripción: ${e.descripcion}\n- Logros: ${e.logro||'no especificado'}`).join('\n\n');
+  const prompt=`Eres experto en RRHH. El usuario quiere aplicar al cargo: "${cargo}" en la industria: "${document.getElementById('industria').value}".\nExperiencias:\n${expTexto}\nEducación: ${document.getElementById('educacion').value}\nHabilidades: ${document.getElementById('habilidades').value}\nIdiomas: ${document.getElementById('idiomas').value}\n\nTarea: Transforma en bullets de LOGROS con impacto (verbos de acción, números estimados). Adapta al cargo "${cargo}". Escribe resumen profesional 2-3 líneas.\n\nResponde SOLO en JSON sin markdown:\n{"resumen":"","experiencias":[{"cargo":"","empresa":"","periodo":"","bullets":["logro1","logro2","logro3"]}]}`;
+  try{
+    const res=await fetch('/.netlify/functions/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1500,messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    const text=data.content.map(c=>c.text||'').join('');
+    cvData=JSON.parse(text.replace(/```json|```/g,'').trim());
+    ai.innerHTML='<div class="ai-label">✓ Listo</div>Tu CV fue procesado. Ahora elige el formato.';
+    setTimeout(()=>goTo(3),800);
+  }catch(err){
+    ai.innerHTML='<div class="ai-label" style="color:red">Error</div>Hubo un problema. Intenta de nuevo.';
+  }finally{btn.disabled=false;spinner.style.display='none';bar.classList.remove('active');}
+}
+
+function volverDesdeFormato(){goTo(rutaElegida==='upload'?'1a':2);}
+
+function selectFormat(f){
+  selectedFormat=f;
+  document.getElementById('opt-ats').classList.remove('selected');
+  document.getElementById('opt-visual').classList.remove('selected');
+  document.getElementById('opt-'+f).classList.add('selected');
+  document.getElementById('btn-ver-cv').disabled=false;
+  document.getElementById('btn-ver-cv').textContent=f==='ats'?'Ver CV para ATS →':'Ver CV visual →';
+}
+
+function verCV(){renderCV();goTo(4);}
+
+function renderCV(){
+  if(!cvData)return;
+  const nombre=document.getElementById('nombre').value;
+  const email=document.getElementById('email').value;
+  const telefono=document.getElementById('telefono').value;
+  const linkedin=document.getElementById('linkedin').value;
+  const educacion=document.getElementById('educacion').value;
+  const habilidades=document.getElementById('habilidades').value;
+  const idiomas=document.getElementById('idiomas').value;
+  const cargo=document.getElementById('cargo-objetivo').value;
+  if(selectedFormat==='ats'){
+    document.getElementById('cv-titulo').textContent='CV optimizado para ATS';
+    document.getElementById('cv-subtitulo').textContent='Formato limpio para empresas grandes que usan sistemas automáticos.';
+    const expHtml=cvData.experiencias.map(e=>`<div style="margin-bottom:0.8rem"><div class="cv-job-title">${e.cargo}</div><div class="cv-company">${e.empresa} | ${e.periodo}</div><ul>${e.bullets.map(b=>`<li>${b}</li>`).join('')}</ul></div>`).join('');
+    document.getElementById('cv-ats').innerHTML=`<div class="cv-name">${nombre}</div><div class="cv-contact">${[email,telefono,linkedin].filter(Boolean).join(' · ')}</div><div class="cv-summary">${cvData.resumen}</div><div class="cv-section-title">Experiencia Profesional</div>${expHtml}${educacion?`<div class="cv-section-title">Educación</div><div style="font-size:10pt">${educacion}</div>`:''}${habilidades?`<div class="cv-section-title">Habilidades</div><div style="font-size:10pt">${habilidades}</div>`:''}${idiomas?`<div class="cv-section-title">Idiomas</div><div style="font-size:10pt">${idiomas}</div>`:''}`;
+    document.getElementById('cv-ats').style.display='block';
+    document.getElementById('cv-visual').style.display='none';
+  }else{
+    document.getElementById('cv-titulo').textContent='CV con diseño visual';
+    document.getElementById('cv-subtitulo').textContent='Para empresas medianas, startups o envío directo a un reclutador.';
+    const expHtml=cvData.experiencias.map(e=>`<div style="margin-bottom:1rem"><div class="job-title">${e.cargo}</div><div class="company">${e.empresa} · ${e.periodo}</div><ul>${e.bullets.map(b=>`<li>${b}</li>`).join('')}</ul></div>`).join('');
+    const skillList=habilidades?habilidades.split(',').map(s=>`<div class="sidebar-item">· ${s.trim()}</div>`).join(''):'';
+    const idiomaList=idiomas?idiomas.split(',').map(s=>`<div class="sidebar-item">· ${s.trim()}</div>`).join(''):'';
+    document.getElementById('cv-visual').innerHTML=`<div class="cv-sidebar"><div class="cv-name">${nombre}</div><div class="cv-title">${cargo}</div>${email?`<div class="sidebar-section"><div class="sidebar-label">Contacto</div><div class="sidebar-item">${email}</div><div class="sidebar-item">${telefono}</div>${linkedin?`<div class="sidebar-item">${linkedin}</div>`:''}</div>`:''}${skillList?`<div class="sidebar-section"><div class="sidebar-label">Habilidades</div>${skillList}</div>`:''}${idiomaList?`<div class="sidebar-section"><div class="sidebar-label">Idiomas</div>${idiomaList}</div>`:''}${educacion?`<div class="sidebar-section"><div class="sidebar-label">Educación</div><div class="sidebar-item" style="font-size:0.72rem">${educacion}</div></div>`:''}</div><div class="cv-main"><div class="section-title">Perfil Profesional</div><div class="summary">${cvData.resumen}</div><div class="section-title">Experiencia</div>${expHtml}</div>`;
+    document.getElementById('cv-visual').style.display='grid';
+    document.getElementById('cv-ats').style.display='none';
+  }
+}
+
+function descargarPDF(){
+  const el=selectedFormat==='ats'?document.getElementById('cv-ats'):document.getElementById('cv-visual');
+  const nombre=document.getElementById('nombre').value.replace(/\s+/g,'_')||'CV';
+  html2pdf().set({margin:selectedFormat==='ats'?[15,15]:0,filename:`CV_${nombre}.pdf`,image:{type:'jpeg',quality:0.98},html2canvas:{scale:2,useCORS:true},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}).from(el).save();
+}
+
+function nuevoCV(){
+  document.getElementById('cargo-objetivo').value='';
+  document.getElementById('cargo-upload').value='';
+  cvData=null;selectedFormat=null;cvUploadData=null;
+  document.getElementById('opt-ats').classList.remove('selected');
+  document.getElementById('opt-visual').classList.remove('selected');
+  document.getElementById('btn-ver-cv').disabled=true;
+  document.getElementById('upload-area').classList.remove('has-file');
+  document.getElementById('upload-filename').textContent='';
+  goTo(0);
+}
+</script>
+</body>
+</html>
