@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Cuánto tiempo tienes?</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --amber:#BA7517;--amber-light:#FAEEDA;--amber-mid:#E8941A;
+  --teal:#0F6E56;--teal-light:#E1F5EE;
+  --red:#C0392B;--red-light:#FDECEA;
+  --purple:#3C3489;--purple-light:#EEEDFE;
+  --text:#2C2C2A;--text-muted:#5F5E5A;--border:#D3D1C7;
+  --bg:#F7F6F2;--white:#FFFFFF;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.7;color:var(--text);background:var(--bg)}
+.top-nav{position:sticky;top:0;z-index:100;background:#1a1200;padding:10px 40px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{color:#FAC775;font-size:13px;font-weight:500;letter-spacing:.05em}
+.nav-steps{display:flex;gap:6px}
+.nav-dot{width:28px;height:4px;border-radius:2px;background:rgba(255,255,255,.2);transition:background .3s}
+.nav-dot.done{background:rgba(255,255,255,.7)}
+.nav-dot.active{background:#FAC775}
+.section{padding:70px 0;max-width:680px;margin:0 auto;padding-left:40px;padding-right:40px}
+.cover{background:#1a1200;padding:100px 60px 80px;min-height:88vh;display:flex;flex-direction:column;justify-content:space-between;max-width:100%}
+.cover-tag{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.4);font-weight:500}
+.cover-title{font-family:'Playfair Display',serif;font-size:64px;line-height:1.05;font-weight:700;color:white;margin:28px 0 16px;max-width:580px}
+.cover-title em{font-style:italic;color:#FAC775}
+.cover-sub{font-size:17px;color:rgba(255,255,255,.6);max-width:440px;font-weight:300;line-height:1.6}
+.cover-bottom{display:flex;justify-content:space-between;align-items:flex-end;margin-top:60px}
+.cover-author{font-size:13px;color:rgba(255,255,255,.4)}
+.start-btn{background:#FAC775;color:#1a1200;border:none;padding:14px 32px;border-radius:100px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:40px;display:inline-block;transition:opacity .2s}
+.start-btn:hover{opacity:.85}
+h1{font-family:'Playfair Display',serif;font-size:36px;line-height:1.2;font-weight:700;color:var(--text);margin-bottom:20px}
+h2{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--text);margin-bottom:14px;line-height:1.3}
+h3{font-size:16px;font-weight:500;color:var(--text);margin-bottom:8px}
+p{margin-bottom:14px;font-weight:300;line-height:1.75}
+.section-label{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);font-weight:500;margin-bottom:10px}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;margin-bottom:32px}
+.progress-fill{height:100%;background:var(--amber-mid);border-radius:2px;transition:width .4s}
+.card{background:white;border:1px solid var(--border);border-radius:14px;padding:28px;margin-bottom:20px}
+.q-group{margin-bottom:28px}
+.q-group:last-child{margin-bottom:0}
+.q-label{font-size:15px;font-weight:500;color:var(--text);margin-bottom:8px;line-height:1.4}
+.q-hint{font-size:13px;color:var(--text-muted);margin-bottom:10px;font-weight:300}
+.options{display:flex;flex-wrap:wrap;gap:10px}
+.opt-btn{padding:10px 18px;border-radius:100px;border:1.5px solid var(--border);background:white;color:var(--text);font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;line-height:1.3}
+.opt-btn:hover{border-color:var(--amber-mid);color:var(--amber)}
+.opt-btn.selected{background:var(--amber-mid);color:white;border-color:var(--amber-mid)}
+
+/* SCENARIO CARDS */
+.scenario-card{border-radius:14px;padding:28px;margin-bottom:24px;border:2px solid}
+.sc-rojo{background:#fff8f7;border-color:#e74c3c}
+.sc-naranja{background:#fffbf0;border-color:var(--amber-mid)}
+.sc-verde{background:#f0faf5;border-color:#1D9E75}
+.sc-azul{background:#f0f4ff;border-color:var(--purple)}
+.sc-icon{font-size:40px;margin-bottom:12px}
+.sc-nivel{font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;margin-bottom:8px}
+.sc-rojo .sc-nivel{color:#e74c3c}
+.sc-naranja .sc-nivel{color:var(--amber)}
+.sc-verde .sc-nivel{color:#1D9E75}
+.sc-azul .sc-nivel{color:var(--purple)}
+.sc-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:12px}
+.sc-rojo .sc-title{color:#c0392b}
+.sc-naranja .sc-title{color:var(--amber)}
+.sc-verde .sc-title{color:#0F6E56}
+.sc-azul .sc-title{color:var(--purple)}
+.sc-body{font-size:15px;font-weight:300;line-height:1.75}
+
+/* ACTION ITEMS */
+.action-list{margin-top:20px;display:flex;flex-direction:column;gap:0}
+.action-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)}
+.action-item:last-child{border-bottom:none}
+.action-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:8px}
+.a-rojo{background:#e74c3c}
+.a-naranja{background:var(--amber-mid)}
+.a-verde{background:#1D9E75}
+.a-azul{background:var(--purple)}
+.action-text strong{font-weight:500;font-size:15px}
+.action-text p{font-size:14px;margin:2px 0 0;color:var(--text-muted)}
+
+/* OFFER EVALUATOR */
+.offer-result{border-radius:14px;padding:24px;margin-top:20px;border:2px solid}
+.or-acepta{background:#f0faf5;border-color:#1D9E75}
+.or-evalua{background:#fffbf0;border-color:var(--amber-mid)}
+.or-cuidado{background:#fff8f7;border-color:#e74c3c}
+
+/* AI BLOCK */
+.ai-block{background:var(--amber-light);border-radius:10px;overflow:hidden;margin-top:20px}
+.ai-trigger{width:100%;padding:12px 18px;background:var(--amber-mid);color:white;border:none;cursor:pointer;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:8px;transition:opacity .2s;text-align:left}
+.ai-trigger:hover{opacity:.88}
+.ai-trigger:disabled{opacity:.6;cursor:not-allowed}
+.ai-response{padding:16px 18px;font-size:14px;line-height:1.7;color:var(--amber);font-weight:300;white-space:pre-wrap;min-height:0}
+
+.insight{background:var(--teal-light);border-left:3px solid var(--teal);padding:16px 20px;border-radius:0 10px 10px 0;margin:20px 0}
+.insight p{color:var(--teal);margin:0;font-size:14px}
+.warning{background:var(--amber-light);border-left:3px solid var(--amber-mid);padding:16px 20px;border-radius:0 10px 10px 0;margin:20px 0}
+.warning p{color:var(--amber);margin:0;font-size:14px}
+.alert{background:#fff8f7;border-left:3px solid #e74c3c;padding:16px 20px;border-radius:0 10px 10px 0;margin:20px 0}
+.alert p{color:#c0392b;margin:0;font-size:14px}
+
+.btn-primary{background:#1a1200;color:#FAC775;border:none;padding:14px 32px;border-radius:100px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .2s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary:hover{opacity:.85}
+.btn-primary:disabled{opacity:.35;cursor:not-allowed}
+.btn-secondary{background:transparent;color:var(--text);border:1.5px solid var(--border);padding:12px 24px;border-radius:100px;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.btn-secondary:hover{border-color:var(--text)}
+.btn-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+
+.final-section{background:#1a1200;padding:80px 60px;max-width:100%}
+.final-section h2{font-family:'Playfair Display',serif;color:white;font-size:32px;margin-bottom:14px}
+.final-section p{color:rgba(255,255,255,.6);font-size:15px;max-width:500px;font-weight:300}
+.next-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:40px;max-width:520px}
+.next-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:18px 22px;text-decoration:none;transition:background .2s}
+.next-card:hover{background:rgba(255,255,255,.13)}
+.nc-num{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-bottom:5px}
+.nc-title{font-size:14px;font-weight:500;color:white}
+
+@media(max-width:600px){
+  .cover{padding:60px 28px}.cover-title{font-size:44px}
+  .section{padding:50px 24px}.next-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <span class="nav-brand">¿Cuánto tiempo tienes?</span>
+  <div class="nav-steps">
+    <div class="nav-dot active" id="dot-0"></div>
+    <div class="nav-dot" id="dot-1"></div>
+    <div class="nav-dot" id="dot-2"></div>
+    <div class="nav-dot" id="dot-3"></div>
+  </div>
+</nav>
+
+<!-- COVER -->
+<div id="s-cover">
+  <div class="cover">
+    <div class="cover-tag">Producto 3 de 4 · El Código del Empleo</div>
+    <div>
+      <div class="cover-title">¿Cuánto tiempo<br><em>tienes?</em></div>
+      <div class="cover-sub">No todos buscan trabajo desde el mismo lugar. Tu estrategia depende de tu situación real — no de consejos genéricos. Aquí vas a descubrir exactamente qué hacer con lo que tienes.</div>
+      <button class="start-btn" onclick="irA('s-situacion')">Descubrir mi estrategia</button>
+    </div>
+    <div class="cover-bottom">
+      <div class="cover-author">Por Militza Medina · @elcodigodelempleo</div>
+    </div>
+  </div>
+</div>
+
+<!-- PASO 1: SITUACIÓN LABORAL -->
+<div id="s-situacion" class="section" style="display:none">
+  <div class="section-label">Paso 1 de 3</div>
+  <div class="progress-bar"><div class="progress-fill" style="width:33%"></div></div>
+  <h1>Primero lo primero</h1>
+  <p style="color:var(--text-muted)">Antes de hablar de estrategia, necesito entender desde dónde estás buscando. Responde con honestidad — nadie más verá esto.</p>
+
+  <div class="card">
+    <div class="q-group">
+      <div class="q-label">¿Cuál es tu situación laboral actual?</div>
+      <div class="options" id="opts-situacion">
+        <button class="opt-btn" onclick="sel('situacion',this,'desempleado_sin_ingresos')">Estoy desempleado/a y sin ingresos</button>
+        <button class="opt-btn" onclick="sel('situacion',this,'desempleado_con_apoyo')">Estoy desempleado/a pero tengo apoyo familiar o pareja</button>
+        <button class="opt-btn" onclick="sel('situacion',this,'empleado_quiere_cambiar')">Estoy trabajando pero quiero cambiar</button>
+        <button class="opt-btn" onclick="sel('situacion',this,'empleado_insatisfecho')">Estoy trabajando en algo que no me gusta pero necesito el dinero</button>
+        <button class="opt-btn" onclick="sel('situacion',this,'freelance_irregular')">Tengo ingresos irregulares (freelance, por proyectos)</button>
+      </div>
+    </div>
+
+    <div class="q-group" id="grupo-meses" style="display:none">
+      <div class="q-label">¿Cuántos meses puedes vivir con lo que tienes ahorrado o disponible?</div>
+      <div class="q-hint">Suma ahorros + ayuda familiar + cualquier ingreso puntual que esperas</div>
+      <div class="options" id="opts-meses">
+        <button class="opt-btn" onclick="sel('meses',this,'0')">Menos de 1 mes</button>
+        <button class="opt-btn" onclick="sel('meses',this,'1-2')">1 a 2 meses</button>
+        <button class="opt-btn" onclick="sel('meses',this,'3-4')">3 a 4 meses</button>
+        <button class="opt-btn" onclick="sel('meses',this,'5-6')">5 a 6 meses</button>
+        <button class="opt-btn" onclick="sel('meses',this,'6+')">Más de 6 meses</button>
+      </div>
+    </div>
+
+    <div class="q-group">
+      <div class="q-label">¿Tienes personas que dependen económicamente de ti?</div>
+      <div class="options" id="opts-dependientes">
+        <button class="opt-btn" onclick="sel('dependientes',this,'no')">No</button>
+        <button class="opt-btn" onclick="sel('dependientes',this,'si_1')">Sí, 1 persona</button>
+        <button class="opt-btn" onclick="sel('dependientes',this,'si_varios')">Sí, 2 o más personas</button>
+      </div>
+    </div>
+
+    <div class="q-group">
+      <div class="q-label">¿Cuánto tiempo llevas en esta situación o búsqueda?</div>
+      <div class="options" id="opts-tiempo">
+        <button class="opt-btn" onclick="sel('tiempo',this,'recien')">Acabo de empezar (menos de 1 mes)</button>
+        <button class="opt-btn" onclick="sel('tiempo',this,'poco')">1 a 3 meses</button>
+        <button class="opt-btn" onclick="sel('tiempo',this,'medio')">3 a 6 meses</button>
+        <button class="opt-btn" onclick="sel('tiempo',this,'mucho')">Más de 6 meses</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-primary" id="btn-paso1" onclick="irA('s-financiero')" disabled>Continuar →</button>
+  </div>
+</div>
+
+<!-- PASO 2: DIAGNÓSTICO FINANCIERO -->
+<div id="s-financiero" class="section" style="display:none">
+  <div class="section-label">Paso 2 de 3</div>
+  <div class="progress-bar"><div class="progress-fill" style="width:66%"></div></div>
+  <h1>Tu situación financiera real</h1>
+  <p style="color:var(--text-muted)">Dos preguntas más para entender el nivel de presión real con el que estás operando.</p>
+
+  <div class="card">
+    <div class="q-group">
+      <div class="q-label">¿Cuál es tu carga de deudas mensuales fijas?</div>
+      <div class="q-hint">Arriendo o hipoteca, créditos, pensión alimenticia, etc.</div>
+      <div class="options" id="opts-deudas">
+        <button class="opt-btn" onclick="sel('deudas',this,'bajas')">Bajas o ninguna — puedo vivir con poco</button>
+        <button class="opt-btn" onclick="sel('deudas',this,'moderadas')">Moderadas — menos del 40% de lo que ganaba</button>
+        <button class="opt-btn" onclick="sel('deudas',this,'altas')">Altas — más del 40% de lo que ganaba</button>
+        <button class="opt-btn" onclick="sel('deudas',this,'criticas')">Críticas — estoy endeudado/a y no puedo pagar</button>
+      </div>
+    </div>
+
+    <div class="q-group">
+      <div class="q-label">¿Estás dispuesto/a a reducir tu estilo de vida para darte más tiempo?</div>
+      <div class="q-hint">Ej: salir menos, cancelar servicios, mudarse a algo más barato, etc.</div>
+      <div class="options" id="opts-reducir">
+        <button class="opt-btn" onclick="sel('reducir',this,'si')">Sí, lo que sea necesario</button>
+        <button class="opt-btn" onclick="sel('reducir',this,'algo')">Puedo reducir algo pero no todo</button>
+        <button class="opt-btn" onclick="sel('reducir',this,'no')">Prefiero no cambiar mi estilo de vida</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-secondary" onclick="irA('s-situacion')">← Volver</button>
+    <button class="btn-primary" id="btn-paso2" onclick="generarEstrategia()" disabled>Ver mi estrategia →</button>
+  </div>
+</div>
+
+<!-- PASO 3: ESTRATEGIA + ANÁLISIS IA -->
+<div id="s-estrategia" class="section" style="display:none">
+  <div class="section-label">Tu diagnóstico</div>
+  <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+  <h1>Tu situación y tu estrategia</h1>
+
+  <div id="escenario-card"></div>
+  <div id="acciones-card"></div>
+
+  <div class="ai-block">
+    <button class="ai-trigger" id="btn-ai-estrategia" onclick="analizarConIA()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+      Quiero que la IA me dé un consejo personalizado para mi situación exacta
+    </button>
+    <div class="ai-response" id="ai-estrategia"></div>
+  </div>
+
+  <div style="margin-top:36px;padding-top:28px;border-top:1px solid var(--border)">
+    <h2>¿Llegó una oferta?</h2>
+    <p style="color:var(--text-muted)">Si tienes una oferta sobre la mesa, evalúala aquí.</p>
+
+    <div class="card">
+      <div class="q-group">
+        <div class="q-label">¿Cuánto ofrece el cargo vs. lo que ganabas antes?</div>
+        <div class="options" id="opts-salario">
+          <button class="opt-btn" onclick="sel('salario',this,'igual_o_mas')">Igual o más de lo que ganaba</button>
+          <button class="opt-btn" onclick="sel('salario',this,'poco_menos')">Un poco menos (80-99%)</button>
+          <button class="opt-btn" onclick="sel('salario',this,'menos')">Bastante menos (50-79%)</button>
+          <button class="opt-btn" onclick="sel('salario',this,'mucho_menos')">Mucho menos (menos del 50%)</button>
+          <button class="opt-btn" onclick="sel('salario',this,'primer_trabajo')">Es mi primer trabajo formal</button>
+        </div>
+      </div>
+
+      <div class="q-group">
+        <div class="q-label">¿El cargo te acerca a donde quieres estar en 3 años?</div>
+        <div class="options" id="opts-futuro">
+          <button class="opt-btn" onclick="sel('futuro',this,'si_directo')">Sí, es exactamente el camino</button>
+          <button class="opt-btn" onclick="sel('futuro',this,'si_indirecto')">Me acerca aunque no es ideal</button>
+          <button class="opt-btn" onclick="sel('futuro',this,'neutro')">No tiene relación pero necesito el ingreso</button>
+          <button class="opt-btn" onclick="sel('futuro',this,'no_se')">No tengo claridad de mis metas aún</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="btn-oferta" onclick="evaluarOferta()" disabled>Evaluar esta oferta</button>
+    <div id="oferta-resultado" style="display:none;margin-top:20px"></div>
+  </div>
+
+  <div class="btn-row" style="margin-top:32px">
+    <button class="btn-primary" onclick="irA('s-final')">Terminar →</button>
+  </div>
+</div>
+
+<!-- FINAL -->
+<div id="s-final" style="display:none">
+  <div class="final-section">
+    <div class="section-label" style="color:rgba(255,255,255,.4)">Has terminado el Producto 3</div>
+    <h2>Ahora sabes con qué cartas juegas.</h2>
+    <p>La búsqueda de empleo con estrategia es completamente diferente a la búsqueda a ciegas. Tienes el diagnóstico, la estrategia y el criterio para tomar decisiones.</p>
+    <div class="next-grid">
+      <a href="https://de-donde-vengo-hacia-donde-voy.netlify.app" target="_blank" class="next-card">
+        <div class="nc-num">Producto 1</div>
+        <div class="nc-title">De dónde vengo →</div>
+      </a>
+      <a href="https://de-donde-vengo-hacia-donde-voy.netlify.app/cv_producto2_v5.html" target="_blank" class="next-card">
+        <div class="nc-num">Producto 2</div>
+        <div class="nc-title">El CV que abre puertas →</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+const R = {};
+
+function sel(campo, btn, valor){
+  R[campo] = valor;
+  btn.closest('.options').querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+
+  // Mostrar/ocultar grupo de meses según situación
+  if(campo==='situacion'){
+    const mostrarMeses = ['desempleado_sin_ingresos','desempleado_con_apoyo','freelance_irregular'].includes(valor);
+    document.getElementById('grupo-meses').style.display = mostrarMeses?'block':'none';
+    if(!mostrarMeses) R['meses'] = 'empleado';
+  }
+
+  // Habilitar botones
+  const paso1Ok = R.situacion && R.dependientes && R.tiempo && (R.meses||['empleado_quiere_cambiar','empleado_insatisfecho'].includes(R.situacion));
+  document.getElementById('btn-paso1').disabled = !paso1Ok;
+
+  const paso2Ok = R.deudas && R.reducir;
+  document.getElementById('btn-paso2').disabled = !paso2Ok;
+
+  const ofertaOk = R.salario && R.futuro;
+  if(document.getElementById('btn-oferta')) document.getElementById('btn-oferta').disabled = !ofertaOk;
+}
+
+function getEscenario(){
+  const sit = R.situacion||'';
+  const meses = R.meses||'';
+  const dep = R.dependientes||'no';
+  const tiempo = R.tiempo||'recien';
+  const deudas = R.deudas||'bajas';
+
+  if(sit==='empleado_quiere_cambiar') return 'E4';
+  if(sit==='empleado_insatisfecho') return 'E5';
+
+  const tienePresion = dep!=='no' || deudas==='altas' || deudas==='criticas';
+
+  if(meses==='0' || (meses==='1-2' && tienePresion)) return 'E1';
+  if(meses==='1-2' || meses==='3-4') return 'E2';
+  return 'E3';
+}
+
+const ESCENARIOS = {
+  E1:{
+    clase:'sc-rojo',icon:'🔴',nivel:'URGENCIA MÁXIMA',
+    title:'Necesitas ingresos ahora — no el trabajo perfecto',
+    body:`Esta es la verdad que nadie te dice porque incomoda: en tu situación, el primer objetivo no es encontrar el trabajo ideal. Es evitar que la presión financiera destruya tu capacidad de elegir con inteligencia.\n\nCuando el dinero se acaba, las personas aceptan lo primero que llega — y eso suele ser peor que cualquier trabajo temporal. El plan correcto tiene dos fases simultáneas: ingresos inmediatos para sobrevivir, y búsqueda inteligente en paralelo para el trabajo que realmente quieres.`,
+    acciones:[
+      {titulo:'Esta semana: activa ingresos puente',desc:'Trabajo temporal, delivery, freelance, lo que sea. No para quedarte ahí — para comprar 30-60 días de margen sin pánico. Un cerebro bajo presión financiera extrema no toma buenas decisiones.'},
+      {titulo:'Amplía el espejo de búsqueda',desc:'Si tu área es difícil, busca roles donde el 60-70% de tus habilidades sirven. La ingeniería eléctrica sirve en mantenimiento industrial, ventas técnicas, gestión de proyectos. No te limites al título exacto.'},
+      {titulo:'Reduce gastos sin esperar',desc:'Identifica los 3 gastos más grandes que puedes eliminar o reducir hoy. Cada semana de margen extra vale más de lo que crees cuando estás bajo presión.'},
+      {titulo:'Aplica con volumen inteligente',desc:'Mínimo 5 aplicaciones por semana, personalizadas. Usa el CV del Producto 2. No esperes a tener el CV perfecto — envíalo bueno y mejóralo en el camino.'}
+    ],color:'rojo'
+  },
+  E2:{
+    clase:'sc-naranja',icon:'🟡',nivel:'MARGEN LIMITADO — ACTÚA CON ESTRATEGIA',
+    title:'Tienes tiempo, pero no para desperdiciarlo',
+    body:`Tienes entre 1 y 4 meses de margen. Eso es suficiente para buscar bien — pero no para buscar sin estrategia. El error más común en esta situación es creer que tienes más tiempo del que realmente tienes, y llegar al mes 3 sin ofertas y con la presión del mes 1.\n\nEl momento de actuar con urgencia moderada es ahora, no cuando el dinero se termine. La diferencia entre buscar desde la calma y buscar desde el pánico es enorme.`,
+    acciones:[
+      {titulo:'Reduce gastos para estirar el margen',desc:'Si puedes pasar de 3 meses a 5 meses de margen reduciendo gastos no esenciales, hazlo esta semana. Eso cambia completamente tu posición negociadora.'},
+      {titulo:'Define el cargo objetivo con precisión',desc:'No "algo en administración". Define: cargo específico, industria, rango salarial mínimo aceptable. Sin eso, aplicas a todo y no eres convincente para nada.'},
+      {titulo:'Activa tu red de contactos esta semana',desc:'El 70% de los trabajos se consiguen por referidos. Escríbele a 5 personas de tu red — no para pedir trabajo, sino para reconectar. La conversación lleva al trabajo.'},
+      {titulo:'Fija una fecha de decisión',desc:'Define: "Si en X semanas no tengo oferta razonable, ajusto mis criterios". Tener un plazo te protege del análisis paralizante y te obliga a ser honesto/a contigo mismo/a.'}
+    ],color:'naranja'
+  },
+  E3:{
+    clase:'sc-verde',icon:'🟢',nivel:'POSICIÓN SÓLIDA',
+    title:'Tienes margen para ser selectivo/a — úsalo bien',
+    body:`Más de 5-6 meses de margen financiero es una posición privilegiada en la búsqueda de empleo. La mayoría de las personas no tiene ese lujo. Significa que puedes esperar la oportunidad correcta, negociar sin miedo y rechazar ofertas que no se alineen con tus metas.\n\nEl riesgo aquí es el opuesto: la comodidad puede convertirse en parálisis. Tener tiempo no significa usarlo mal. La mejor estrategia con margen amplio es buscar con intención, no con urgencia.`,
+    acciones:[
+      {titulo:'Define exactamente qué buscas',desc:'Cargo, industria, tipo de empresa, cultura, rango salarial. Mientras más específico, más convincente eres en las entrevistas y más eficiente la búsqueda.'},
+      {titulo:'Construye presencia antes de aplicar',desc:'Actualiza LinkedIn, publica contenido sobre tu área, conecta con reclutadores de las empresas target. La búsqueda activa y la presencia pasiva juntas multiplican las oportunidades.'},
+      {titulo:'Invierte en capacitarte si hay brechas',desc:'Si identificaste en el Producto 1 o 2 que te faltan habilidades para el cargo objetivo, este es el momento de cerrarlas. Un curso de 4-6 semanas puede cambiar tu candidatura.'},
+      {titulo:'Negocia sin miedo cuando llegue la oferta',desc:'Con margen financiero, tienes el mayor poder negociador posible. No aceptes la primera oferta automáticamente. El 80% de las empresas tienen rango salarial — pide el techo, no el piso.'}
+    ],color:'verde'
+  },
+  E4:{
+    clase:'sc-azul',icon:'💼',nivel:'EMPLEADO/A EN TRANSICIÓN',
+    title:'La mejor posición para cambiar de trabajo es desde adentro',
+    body:`Buscar trabajo mientras tienes trabajo es completamente diferente a buscar desempleado. Tienes la mayor ventaja posible: no necesitas el trabajo nuevo para sobrevivir. Eso cambia todo — puedes rechazar ofertas malas, negociar con confianza y tomarte el tiempo para encontrar algo realmente mejor.\n\nEl error más común en tu posición es renunciar antes de tener algo concreto. No lo hagas a menos que la situación sea insostenible para tu salud mental.`,
+    acciones:[
+      {titulo:'No renuncies hasta tener la oferta firmada',desc:'Parece obvio pero mucha gente renuncia "para concentrarse en buscar". Eso es un error costoso. Tu trabajo actual es tu red de seguridad — úsala.'},
+      {titulo:'Busca en silencio, sin quemar puentes',desc:'No le digas a tus compañeros que estás buscando. Actualiza LinkedIn con discreción. El mundo laboral es pequeño.'},
+      {titulo:'Usa tu posición para negociar mejor',desc:'Cuando tengas una oferta, úsala para negociar — con la empresa nueva o incluso con la actual. Las empresas retienen mejor a quien tiene alternativas.'},
+      {titulo:'Define el salario mínimo aceptable para moverte',desc:'Si el nuevo cargo no ofrece al menos X, no vale la incertidumbre del cambio. Tener ese número claro evita que aceptes lateral moves innecesarios.'}
+    ],color:'azul'
+  },
+  E5:{
+    clase:'sc-naranja',icon:'⚖️',nivel:'EMPLEADO/A INSATISFECHO/A',
+    title:'Trabaja desde adentro — pero con fecha de salida',
+    body:`Estás en el escenario más común y más difícil emocionalmente: necesitas el dinero pero el trabajo te pesa. La tentación de renunciar es enorme — y a veces la respuesta correcta. Pero en la mayoría de los casos, la estrategia correcta es quedarse mientras se construye la salida.\n\nEl trabajo que no te gusta tiene un valor enorme: te paga para que busques el que sí te guste. Trátalo como lo que es — un puente, no un destino.`,
+    acciones:[
+      {titulo:'Pon una fecha límite de salida — y cúmplela',desc:'Define: "En X meses me voy, tenga trabajo nuevo o no". Eso convierte una situación indefinida en un plan concreto y te da energía para aguantar.'},
+      {titulo:'Usa las horas libres para buscar, no para descansar',desc:'Las tardes y fines de semana son tuyos. Dedica al menos 5-6 horas semanales a buscar activamente, no a quejarte de tu trabajo actual.'},
+      {titulo:'Ahorra como si ya te hubieran despedido',desc:'Construye el colchón financiero ahora, mientras tienes ingresos. Cada mes de ahorro es un mes de libertad cuando finalmente salgas.'},
+      {titulo:'No dejes que el trabajo actual te defina',desc:'Separa tu energía emocional del trabajo. Cumple bien, pero no inviertas más de lo necesario. Guarda la energía para construir tu siguiente paso.'}
+    ],color:'naranja'
+  }
+};
+
+function generarEstrategia(){
+  const esc = getEscenario();
+  const e = ESCENARIOS[esc];
+  window._escenario = esc;
+
+  document.getElementById('escenario-card').innerHTML=`
+    <div class="scenario-card ${e.clase}">
+      <div class="sc-icon">${e.icon}</div>
+      <div class="sc-nivel">${e.nivel}</div>
+      <div class="sc-title">${e.title}</div>
+      <div class="sc-body">${e.body.replace(/\n\n/g,'</p><p style="margin-top:12px">').replace(/^/,'<p>').replace(/$/,'</p>')}</div>
+    </div>`;
+
+  const colorDot = e.color;
+  const items = e.acciones.map((a,i)=>`
+    <div class="action-item">
+      <div class="action-dot a-${colorDot}" style="margin-top:8px"></div>
+      <div class="action-text">
+        <strong>${a.titulo}</strong>
+        <p>${a.desc}</p>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('acciones-card').innerHTML=`
+    <h2 style="margin-top:28px;margin-bottom:16px">Tu plan de acción</h2>
+    <div class="card" style="padding:8px 28px">${items}</div>`;
+
+  irA('s-estrategia');
+}
+
+function evaluarOferta(){
+  const sal = R.salario||'';
+  const fut = R.futuro||'';
+  const esc = window._escenario||'E2';
+  const urgente = esc==='E1';
+
+  let puntos = 0;
+  if(sal==='igual_o_mas') puntos+=3;
+  else if(sal==='poco_menos') puntos+=2;
+  else if(sal==='menos') puntos+=1;
+
+  if(fut==='si_directo') puntos+=3;
+  else if(fut==='si_indirecto') puntos+=2;
+  else if(fut==='neutro') puntos+=1;
+
+  if(urgente) puntos+=2;
+
+  let clase,icon,titulo,cuerpo;
+  if(puntos>=6){
+    clase='or-acepta';icon='✅';titulo='Esta oferta vale la pena';
+    cuerpo='El salario es razonable y el cargo está alineado con donde quieres ir. Si las condiciones laborales son aceptables, aceptar es una buena decisión.';
+  } else if(puntos>=3){
+    clase='or-evalua';icon='⚖️';titulo='Evalúa bien antes de decidir';
+    cuerpo='Hay aspectos positivos pero también compromisos importantes. Antes de aceptar, intenta negociar el salario y pregunta sobre posibilidades de crecimiento. Una conversación puede cambiar la ecuación.';
+  } else {
+    clase='or-cuidado';icon='⚠️';titulo='Piénsalo bien';
+    cuerpo=urgente
+      ? 'El salario es bajo y el cargo no está alineado con tus metas. Sin embargo, dada tu urgencia financiera, podría ser un puente temporal. Solo acepta si tienes claro que seguirás buscando desde adentro.'
+      : 'Esta oferta implica compromisos significativos en salario y/o dirección de carrera. Con el margen que tienes, vale la pena esperar por algo mejor.';
+  }
+
+  document.getElementById('oferta-resultado').innerHTML=`
+    <div class="offer-result ${clase}">
+      <div style="font-size:28px;margin-bottom:8px">${icon}</div>
+      <h3>${titulo}</h3>
+      <p style="font-weight:300;font-size:14px;margin-top:6px">${cuerpo}</p>
+    </div>`;
+  document.getElementById('oferta-resultado').style.display='block';
+
+  // Mostrar AI block
+  document.getElementById('oferta-resultado').insertAdjacentHTML('afterend',`
+    <div class="ai-block" id="ai-block-oferta" style="margin-top:16px">
+      <button class="ai-trigger" id="btn-ai-oferta" onclick="analizarOferta()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+        Quiero que la IA me dé su opinión sobre esta oferta
+      </button>
+      <div class="ai-response" id="ai-oferta-resp"></div>
+    </div>`);
+
+  document.getElementById('oferta-resultado').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+async function callAI(system, user){
+  const res = await fetch('/.netlify/functions/api',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:500,system,messages:[{role:'user',content:user}]})
+  });
+  const data = await res.json();
+  return data.content.map(c=>c.text||'').join('');
+}
+
+async function analizarConIA(){
+  const btn = document.getElementById('btn-ai-estrategia');
+  const res = document.getElementById('ai-estrategia');
+  btn.disabled=true;
+  res.textContent='Analizando tu situación...';
+
+  const esc = window._escenario||'E2';
+  const e = ESCENARIOS[esc];
+  const context = `Situación: ${R.situacion||'no indicada'}. Meses de margen: ${R.meses||'empleado'}. Dependientes: ${R.dependientes||'no'}. Tiempo en esta situación: ${R.tiempo||'recien'}. Deudas: ${R.deudas||'bajas'}. Dispuesto a reducir gastos: ${R.reducir||'algo'}.`;
+
+  try{
+    const reply = await callAI(
+      `Eres un coach de carrera y finanzas personales honesto y empático. El usuario está en la siguiente situación de búsqueda de empleo. Su escenario es: ${e.nivel}. En 4-5 oraciones: 1) Reconoce su situación específica sin dramatizar ni minimizar. 2) Da el consejo MÁS IMPORTANTE que necesita escuchar ahora mismo — aunque sea incómodo. 3) Si aplica, menciona algo concreto que puede hacer esta semana. 4) Termina con algo que le dé perspectiva y energía. Sé directo, cálido y específico. Sin clichés. En español.`,
+      context
+    );
+    res.textContent=reply;
+  }catch(e){res.textContent='Hubo un error. Intenta de nuevo.';}
+  btn.disabled=false;
+}
+
+async function analizarOferta(){
+  const btn = document.getElementById('btn-ai-oferta');
+  const res = document.getElementById('ai-oferta-resp');
+  btn.disabled=true;res.textContent='Analizando la oferta...';
+
+  const esc = window._escenario||'E2';
+  const e = ESCENARIOS[esc];
+  const context = `Situación financiera: ${e.nivel}. Salario ofrecido vs anterior: ${R.salario||'no indicado'}. Relación con metas a 3 años: ${R.futuro||'no indicado'}. Tiempo buscando: ${R.tiempo||'recien'}.`;
+
+  try{
+    const reply = await callAI(
+      `Eres un coach de carrera directo y honesto. El usuario recibió una oferta laboral. Da una opinión concreta en 3-4 oraciones: 1) Si debería aceptar, negociar o rechazar — y por qué específicamente. 2) Qué debería preguntar o negociar antes de decidir. 3) Una perspectiva de largo plazo sobre esta decisión. NO des respuestas genéricas como "depende de ti". Da tu opinión real. En español.`,
+      context
+    );
+    res.textContent=reply;
+  }catch(e){res.textContent='Hubo un error. Intenta de nuevo.';}
+  btn.disabled=false;
+}
+
+function irA(id){
+  ['s-cover','s-situacion','s-financiero','s-estrategia','s-final'].forEach(s=>{
+    const el=document.getElementById(s);
+    if(el) el.style.display = s===id?'block':'none';
+  });
+  const orden=['s-cover','s-situacion','s-financiero','s-estrategia','s-final'];
+  const idx=orden.indexOf(id);
+  document.querySelectorAll('.nav-dot').forEach((d,i)=>{
+    d.classList.toggle('active',i===idx);
+    d.classList.toggle('done',i<idx);
+  });
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
