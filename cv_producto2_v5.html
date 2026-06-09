@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El CV que sí abre puertas</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1a1f3a;--gold:#c9a84c;--cream:#f7f4ef;--sage:#7a9e8e;--text:#2d2d2d;--muted:#6b7280;--border:#e5e0d8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh}
+nav{background:var(--navy);padding:1rem 2rem}
+.logo{color:var(--gold);font-family:'Fraunces',serif;font-size:1rem;font-weight:300}
+.subtitle{color:rgba(255,255,255,0.5);font-size:0.8rem}
+.progress-bar{background:var(--navy);padding:0 2rem 1rem;display:flex;gap:0.5rem;align-items:center}
+.step-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);transition:all 0.3s}
+.step-dot.active{background:var(--gold);width:24px;border-radius:4px}
+.step-dot.done{background:var(--sage)}
+.section{display:none;max-width:780px;margin:0 auto;padding:3rem 2rem;animation:fadeIn 0.4s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.section-label{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
+h1{font-family:'Fraunces',serif;font-size:2.2rem;font-weight:300;color:var(--navy);line-height:1.2;margin-bottom:1rem}
+h2{font-family:'Fraunces',serif;font-size:1.4rem;font-weight:300;color:var(--navy);margin-bottom:0.5rem}
+.lead{color:var(--muted);font-size:1rem;line-height:1.6;margin-bottom:1.5rem}
+.card{background:white;border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.2rem}
+.card-label{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem}
+input[type=text],textarea,select{width:100%;padding:0.75rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.95rem;color:var(--text);background:white;transition:border-color 0.2s;resize:vertical}
+input[type=text]:focus,textarea:focus,select:focus{outline:none;border-color:var(--navy)}
+textarea{min-height:80px}
+.field-group{margin-bottom:1rem}
+.field-label{display:block;font-size:0.85rem;font-weight:500;color:var(--navy);margin-bottom:0.4rem}
+.field-hint{font-size:0.78rem;color:var(--muted);margin-top:0.3rem}
+.exp-block{background:white;border:1.5px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1rem}
+.exp-block h3{font-size:0.85rem;font-weight:500;color:var(--navy);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border)}
+.btn-primary{background:var(--navy);color:white;border:none;padding:0.85rem 2rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:500;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:0.5rem}
+.btn-primary:hover{background:#252c52;transform:translateY(-1px)}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.btn-secondary{background:transparent;color:var(--navy);border:1.5px solid var(--navy);padding:0.75rem 1.5rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.9rem;cursor:pointer;transition:all 0.2s}
+.btn-secondary:hover{background:var(--navy);color:white}
+.btn-gold{background:var(--gold);color:white;border:none;padding:0.85rem 2rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:500;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:0.5rem}
+.btn-gold:hover{background:#b8943d}
+.btn-blue{background:#2563eb;color:white;border:none;padding:0.85rem 2rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:500;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:0.5rem}
+.btn-blue:hover{background:#1d4ed8}
+.btn-row{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.5rem}
+.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem}
+.choice-card{border:2px solid var(--border);border-radius:14px;padding:2rem 1.5rem;cursor:pointer;transition:all 0.2s;text-align:center;background:white}
+.choice-card:hover{border-color:var(--navy);transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,0.08)}
+.choice-card .icon{font-size:2.5rem;margin-bottom:1rem}
+.choice-card h3{font-size:1rem;font-weight:500;color:var(--navy);margin-bottom:0.4rem}
+.choice-card p{font-size:0.82rem;color:var(--muted);line-height:1.4}
+.upload-area{border:2px dashed var(--border);border-radius:12px;padding:2rem;text-align:center;cursor:pointer;transition:all 0.2s;background:white;margin-bottom:1rem}
+.upload-area:hover{border-color:var(--gold);background:#fdf8ef}
+.upload-area.has-file{border-color:var(--sage);background:#f0f7f4}
+.upload-icon{font-size:2rem;margin-bottom:0.5rem}
+.upload-filename{font-size:0.85rem;color:var(--sage);font-weight:500;margin-top:0.4rem}
+#file-input{display:none}
+.ai-response{background:#f0f4ff;border:1px solid #d0d9ff;border-radius:10px;padding:1.2rem;margin-top:1rem;font-size:0.9rem;line-height:1.6;color:var(--text);display:none}
+.ai-response.visible{display:block;animation:fadeIn 0.3s ease}
+.ai-label{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.5rem;font-weight:500}
+.loading-bar{height:3px;background:var(--border);border-radius:2px;margin:1rem 0;overflow:hidden;display:none}
+.loading-bar.active{display:block}
+.loading-bar::after{content:'';display:block;height:100%;width:40%;background:var(--gold);animation:slide 1s ease-in-out infinite;border-radius:2px}
+@keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
+.spinner{display:inline-block;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ats-choice{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem}
+.ats-option{border:2px solid var(--border);border-radius:12px;padding:1.5rem;cursor:pointer;transition:all 0.2s;text-align:center;background:white}
+.ats-option:hover{border-color:var(--navy)}
+.ats-option.selected{border-color:var(--gold);background:#fdf8ef}
+.ats-option .icon{font-size:2rem;margin-bottom:0.75rem}
+.ats-option h3{font-size:0.95rem;font-weight:500;color:var(--navy);margin-bottom:0.5rem}
+.ats-option p{font-size:0.8rem;color:var(--muted);line-height:1.4}
+.ats-badge{display:inline-block;font-size:0.65rem;padding:0.2rem 0.5rem;border-radius:4px;margin-top:0.5rem;font-weight:500}
+.badge-ats{background:#e8f5e9;color:#2e7d32}
+.badge-visual{background:#fff3e0;color:#e65100}
+.info-box{background:#fffbf0;border:1px solid #f0d78c;border-radius:10px;padding:1rem 1.2rem;margin-bottom:1.5rem;font-size:0.85rem;line-height:1.5;color:#5a4a00}
+.info-box strong{color:#3a2f00}
+
+/* COMPATIBILITY ANALYSIS */
+.compat-score{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}
+.score-circle{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;flex-shrink:0;border:4px solid}
+.score-high{border-color:var(--sage);color:var(--sage);background:#f0f7f4}
+.score-mid{border-color:var(--gold);color:#b8943d;background:#fdf8ef}
+.score-low{border-color:#e57373;color:#c62828;background:#fff5f5}
+.compat-section{margin-bottom:1.2rem}
+.compat-section h4{font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--navy);margin-bottom:0.5rem}
+.compat-item{display:flex;align-items:flex-start;gap:0.5rem;font-size:0.88rem;margin-bottom:0.4rem;line-height:1.4}
+.compat-ok{color:var(--sage)}
+.compat-gap{color:#e57373}
+.compat-question{color:var(--gold)}
+
+/* CV PAGES PREVIEW */
+.cv-pages-wrapper{background:#888;padding:2rem;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:1.5rem;margin-bottom:1.5rem}
+.cv-page{background:white;width:21.59cm;min-height:27.94cm;box-shadow:0 4px 20px rgba(0,0,0,0.3);position:relative;overflow:hidden;page-break-after:always}
+@media(max-width:800px){.cv-page{width:100%;min-height:auto}}
+
+/* ATS CV styles — inside page */
+.cv-page.ats-page{padding:2cm;font-family:Arial,sans-serif;font-size:10.5pt;line-height:1.5;color:#111}
+.cv-page.ats-page .cv-name{font-size:18pt;font-weight:700;margin-bottom:3pt}
+.cv-page.ats-page .cv-contact{font-size:9pt;color:#444;border-bottom:1.5pt solid #111;padding-bottom:6pt;margin-bottom:10pt}
+.cv-page.ats-page .cv-summary{font-size:9.5pt;font-style:italic;color:#333;margin-bottom:10pt}
+.cv-page.ats-page .cv-section{margin-bottom:10pt}
+.cv-page.ats-page .cv-section-title{font-size:9pt;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;border-bottom:0.5pt solid #888;padding-bottom:2pt;margin-bottom:6pt}
+.cv-page.ats-page .cv-job-title{font-weight:700;font-size:10pt}
+.cv-page.ats-page .cv-company{font-size:9pt;color:#555;margin-bottom:3pt}
+.cv-page.ats-page ul{padding-left:14pt;margin-bottom:6pt}
+.cv-page.ats-page ul li{font-size:9.5pt;margin-bottom:2pt}
+
+/* VISUAL CV styles — inside page */
+.cv-page.vis-page{font-family:Arial,sans-serif;color:#111;overflow:hidden}
+.vis-page .vis-header{background:#1a1f3a;color:white;padding:1.2cm 1.5cm 0.8cm}
+.vis-page .vis-name{font-size:20pt;font-weight:700;margin-bottom:4pt;color:white}
+.vis-page .vis-title-role{font-size:9pt;color:#c9a84c;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8pt}
+.vis-page .vis-contact-row{display:flex;flex-wrap:wrap;gap:0.75rem;font-size:8.5pt;color:rgba(255,255,255,0.75)}
+.vis-page .vis-body{padding:0.8cm 1.5cm}
+.vis-page .vis-section{margin-bottom:12pt}
+.vis-page .vis-section-title{font-size:8pt;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#c9a84c;border-bottom:1pt solid #e5e0d8;padding-bottom:2pt;margin-bottom:8pt}
+.vis-page .vis-summary{font-size:9.5pt;font-style:italic;color:#444;line-height:1.5}
+.vis-page .vis-job-title{font-weight:700;font-size:10pt;color:#1a1f3a}
+.vis-page .vis-company{font-size:9pt;color:#666;margin-bottom:3pt}
+.vis-page ul{padding-left:14pt;margin-bottom:6pt}
+.vis-page ul li{font-size:9.5pt;margin-bottom:2pt;color:#222}
+.vis-page .vis-two-col{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem}
+
+@media(max-width:600px){h1{font-size:1.6rem}.choice-grid,.ats-choice{grid-template-columns:1fr}.cv-page{width:100%}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">El CV que sí abre puertas</div>
+  <div class="subtitle">Producto 2 · El Código del Empleo</div>
+</nav>
+<div class="progress-bar">
+  <div class="step-dot active" id="dot-0"></div>
+  <div class="step-dot" id="dot-1"></div>
+  <div class="step-dot" id="dot-2"></div>
+  <div class="step-dot" id="dot-3"></div>
+  <div class="step-dot" id="dot-4"></div>
+  <div class="step-dot" id="dot-5"></div>
+</div>
+
+<!-- PASO 0: BIENVENIDA -->
+<div class="section active" id="step-0">
+  <div class="section-label">Producto 2 de 3</div>
+  <h1>El CV que sí<br><em>abre puertas</em></h1>
+  <p class="lead">La mayoría manda el mismo CV a todos los trabajos y describe funciones en vez de logros. Aquí construirás un CV adaptado exactamente al cargo que buscas.</p>
+  <div class="card">
+    <div class="card-label">¿Por dónde empezamos?</div>
+    <div class="choice-grid">
+      <div class="choice-card" onclick="elegirRuta('upload')">
+        <div class="icon">📄</div>
+        <h3>Ya tengo un CV</h3>
+        <p>Súbelo y la IA lo mejora y adapta al cargo que buscas</p>
+      </div>
+      <div class="choice-card" onclick="elegirRuta('manual')">
+        <div class="icon">✏️</div>
+        <h3>Empiezo desde cero</h3>
+        <p>Te guío paso a paso para construir tu CV desde tus experiencias</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PASO 1A: SUBIR CV -->
+<div class="section" id="step-1a">
+  <div class="section-label">Paso 1 — Con CV existente</div>
+  <h2>Sube tu CV actual</h2>
+  <p class="lead">La IA leerá tu CV y lo adaptará al cargo que buscas.</p>
+  <div class="upload-area" id="upload-area" onclick="document.getElementById('file-input').click()">
+    <div class="upload-icon">📎</div>
+    <div class="upload-text"><strong>Haz clic para subir tu CV</strong> — PDF o Word · Máx 5MB</div>
+    <div class="upload-filename" id="upload-filename"></div>
+  </div>
+  <input type="file" id="file-input" accept=".pdf,.doc,.docx" onchange="archivoSeleccionado(this)">
+  <div class="card">
+    <div class="field-group">
+      <label class="field-label">¿A qué cargo estás aplicando? <span style="color:var(--muted);font-weight:300">(opcional)</span></label>
+      <input type="text" id="cargo-upload" placeholder="Ej: Coordinador de Logística, Analista de Datos...">
+    </div>
+    <div class="field-group">
+      <label class="field-label">¿Qué industria o tipo de empresa? <span style="color:var(--muted);font-weight:300">(opcional)</span></label>
+      <input type="text" id="industria-upload" placeholder="Ej: Retail, Tecnología, Salud...">
+    </div>
+    <div class="field-group">
+      <label class="field-label">¿En qué idioma quieres tu CV?</label>
+      <select id="idioma-upload">
+        <option value="español">Español</option>
+        <option value="inglés">Inglés</option>
+        <option value="español e inglés">Ambos (español e inglés)</option>
+      </select>
+    </div>
+  </div>
+  <div class="card" style="border-color:#c9a84c33;background:#fdf8ef">
+    <div class="field-label" style="margin-bottom:0.4rem">🔗 ¿Completaste el Producto 1? (opcional)</div>
+    <div class="field-hint" style="margin-bottom:0.75rem">Pega aquí el perfil que generó la IA. Lo usaremos para enriquecer tu CV con habilidades que quizás no habías considerado. <a href="https://de-donde-vengo-hacia-donde-voy.netlify.app" target="_blank" style="color:var(--gold);text-decoration:underline">→ Ir al Producto 1 si aún no lo has completado</a></div>
+    <textarea id="perfil-p1-upload" placeholder="Pega aquí el perfil del Producto 1..." style="min-height:80px"></textarea>
+  </div>
+  <div class="btn-row">
+    <button class="btn-secondary" onclick="goTo(0)">← Volver</button>
+    <button class="btn-primary" onclick="irAExpRecientes()">Continuar →</button>
+  </div>
+</div>
+
+<!-- PASO 1C: EXPERIENCIAS RECIENTES -->
+<div class="section" id="step-1c">
+  <div class="section-label">Paso 2 — Con CV existente</div>
+  <h2>¿Tienes experiencias recientes que no están en tu CV?</h2>
+  <p class="lead">Si tu CV tiene más de 6 meses o cambiaste de trabajo desde entonces, agrégalas aquí. Si no, salta al siguiente paso.</p>
+  <div id="exp-recientes-container"></div>
+  <button class="btn-secondary" onclick="agregarExpReciente()" style="margin-bottom:1.5rem">+ Agregar experiencia reciente</button>
+  <div class="btn-row">
+    <button class="btn-secondary" onclick="goTo('1a')">← Volver</button>
+    <button class="btn-primary" onclick="goTo('rol')">Continuar →</button>
+  </div>
+</div>
+
+<!-- PASO 1B: DESDE CERO -->
+<div class="section" id="step-1b">
+  <div class="section-label">Paso 1 — Desde cero</div>
+  <h2>Tus datos y el cargo que buscas</h2>
+  <p class="lead">Esta información se guarda automáticamente.</p>
+  <div class="card">
+    <div class="field-group"><label class="field-label">Nombre completo</label><input type="text" id="nombre" placeholder="Tu nombre completo"></div>
+    <div class="field-group"><label class="field-label">Email personal</label><input type="text" id="email" placeholder="tucorreo@gmail.com"></div>
+    <div class="field-group"><label class="field-label">Teléfono</label><input type="text" id="telefono" placeholder="+56 9 1234 5678"></div>
+    <div class="field-group"><label class="field-label">LinkedIn (opcional)</label><input type="text" id="linkedin" placeholder="linkedin.com/in/tunombre"></div>
+  </div>
+  <div class="card">
+    <div class="field-group">
+      <label class="field-label">¿A qué cargo estás aplicando? <span style="color:var(--muted);font-weight:300">(opcional)</span></label>
+      <input type="text" id="cargo-objetivo" placeholder="Ej: Coordinadora de Logística...">
+    </div>
+    <div class="field-group"><label class="field-label">¿Qué industria o tipo de empresa? <span style="color:var(--muted);font-weight:300">(opcional)</span></label><input type="text" id="industria" placeholder="Ej: Retail, Salud, Tecnología..."></div>
+    <div class="field-group">
+      <label class="field-label">¿En qué idioma quieres tu CV?</label>
+      <select id="idioma-manual">
+        <option value="español">Español</option>
+        <option value="inglés">Inglés</option>
+        <option value="español e inglés">Ambos (español e inglés)</option>
+      </select>
+    </div>
+  </div>
+  <div class="card" style="border-color:#c9a84c33;background:#fdf8ef">
+    <div class="field-label" style="margin-bottom:0.4rem">🔗 ¿Completaste el Producto 1? (opcional)</div>
+    <div class="field-hint" style="margin-bottom:0.75rem">Pega aquí el perfil que generó la IA para enriquecer tu CV. <a href="https://de-donde-vengo-hacia-donde-voy.netlify.app" target="_blank" style="color:var(--gold);text-decoration:underline">→ Ir al Producto 1 si aún no lo has completado</a></div>
+    <textarea id="perfil-p1-manual" placeholder="Pega aquí el perfil del Producto 1..." style="min-height:80px"></textarea>
+  </div>
+  <div class="btn-row">
+    <button class="btn-secondary" onclick="goTo(0)">← Volver</button>
+    <button class="btn-primary" onclick="validarPaso1()">Continuar →</button>
+  </div>
+</div>
+
+<!-- PASO 2: EXPERIENCIAS (manual) -->
+<div class="section" id="step-2">
+  <div class="section-label">Paso 2 de 4</div>
+  <h2>Tus experiencias laborales</h2>
+  <p class="lead">Solo cuéntame qué hacías. La IA lo transforma en logros con impacto.</p>
+  <div id="experiencias-container">
+    <div class="exp-block" id="exp-0">
+      <h3>Experiencia 1 <span style="color:var(--muted);font-weight:300">(la más reciente)</span></h3>
+      <div class="field-group"><label class="field-label">Cargo</label><input type="text" class="exp-cargo" placeholder="Ej: Asistente de Logística"></div>
+      <div class="field-group"><label class="field-label">Empresa</label><input type="text" class="exp-empresa" placeholder="Ej: Falabella"></div>
+      <div class="field-group"><label class="field-label">Período</label><input type="text" class="exp-periodo" placeholder="Ej: 2021 – 2024"></div>
+      <div class="field-group">
+        <label class="field-label">¿Qué hacías en ese trabajo?</label>
+        <textarea class="exp-descripcion" placeholder="Cuéntamelo con tus palabras..."></textarea>
+        <div class="field-hint">No importa si suena simple — la IA lo convierte en logros profesionales.</div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">¿Hubo algo que mejoró gracias a ti? (opcional)</label>
+        <textarea class="exp-logro" placeholder="Ej: Reduje errores, organicé un sistema nuevo..."></textarea>
+      </div>
+    </div>
+  </div>
+  <button class="btn-secondary" onclick="agregarExperiencia()" style="margin-bottom:1rem">+ Agregar otra experiencia</button>
+  <div class="card">
+    <div class="field-group">
+      <label class="field-label">Educación</label>
+      <div id="educacion-container">
+        <div class="edu-entry" style="display:flex;gap:0.5rem;margin-bottom:0.5rem">
+          <input type="text" class="edu-input" placeholder="Ej: Ing. Eléctrica – Univ. Simón Bolívar (2009–2017)" style="flex:1">
+        </div>
+      </div>
+      <button type="button" class="btn-secondary" onclick="agregarEducacion()" style="margin-top:0.3rem;padding:0.4rem 1rem;font-size:0.82rem">+ Agregar otro título</button>
+      <input type="hidden" id="educacion">
+    </div>
+    <div class="field-group"><label class="field-label">Habilidades técnicas</label><input type="text" id="habilidades" placeholder="Ej: Excel, SAP, Power BI..."></div>
+    <div class="field-group">
+      <label class="field-label">Idiomas</label>
+      <div id="idiomas-container">
+        <div class="idioma-entry" style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem">
+          <select class="idioma-select" style="flex:2;padding:0.6rem;border:1.5px solid var(--border);border-radius:8px;font-family:inherit">
+            <option value="">Selecciona idioma</option>
+            <option>Español</option><option>Inglés</option><option>Francés</option><option>Portugués</option><option>Alemán</option><option>Italiano</option><option>Chino (Mandarín)</option><option>Árabe</option><option>Otro</option>
+          </select>
+          <select class="nivel-select" style="flex:2;padding:0.6rem;border:1.5px solid var(--border);border-radius:8px;font-family:inherit">
+            <option value="">Nivel</option>
+            <option>Nativo / C2</option><option>Avanzado / C1</option><option>Intermedio alto / B2</option><option>Intermedio / B1</option><option>Básico / A2</option>
+          </select>
+        </div>
+      </div>
+      <button type="button" class="btn-secondary" onclick="agregarIdioma()" style="margin-top:0.3rem;padding:0.4rem 1rem;font-size:0.82rem">+ Agregar otro idioma</button>
+      <input type="hidden" id="idiomas">
+    </div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-secondary" onclick="goTo('1b')">← Volver</button>
+    <button class="btn-primary" onclick="consolidarCampos();goTo('rol')">Continuar →</button>
+  </div>
+</div>
+
+<!-- PASO ROL: ANÁLISIS DE COMPATIBILIDAD -->
+<div class="section" id="step-rol">
+  <div class="section-label">Análisis del rol</div>
+  <h2>¿Ya tienes en vista el cargo al que aplicarás?</h2>
+  <p class="lead">Si tienes la descripción del puesto, pégala aquí. La IA analizará qué tan bien encajas y qué destacar en tu CV para ese rol específico.</p>
+  <div class="card">
+    <div class="field-group">
+      <label class="field-label">Descripción del cargo (opcional pero muy recomendado)</label>
+      <textarea id="descripcion-rol" placeholder="Pega aquí la descripción completa del cargo — requisitos, responsabilidades, habilidades buscadas..." style="min-height:140px"></textarea>
+      <div class="field-hint">Cópiala directamente desde LinkedIn, el portal de empleo o el email que recibiste.</div>
+    </div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-secondary" id="btn-volver-rol" onclick="volverDesdeRol()">← Volver</button>
+    <button class="btn-secondary" onclick="saltarAnalisis()">Saltar este paso →</button>
+    <button class="btn-primary" id="btn-analizar" onclick="analizarCompatibilidad()">
+      <span class="spinner" id="spinner-rol" style="display:none">⟳</span>
+      Analizar mi compatibilidad →
+    </button>
+  </div>
+  <div class="loading-bar" id="loading-rol"></div>
+  <div class="ai-response" id="ai-rol"></div>
+
+  <!-- RESULTADO ANÁLISIS -->
+  <div id="compat-resultado" style="display:none;margin-top:1.5rem">
+    <div class="card">
+      <div class="compat-score">
+        <div class="score-circle" id="score-circle"></div>
+        <div>
+          <div style="font-size:1rem;font-weight:600;color:var(--navy)" id="score-titulo"></div>
+          <div style="font-size:0.85rem;color:var(--muted);margin-top:0.3rem" id="score-subtitulo"></div>
+        </div>
+      </div>
+      <div id="compat-detalle"></div>
+    </div>
+    <div class="card" id="card-gap-extra" style="display:none;border-color:#c9a84c33;background:#fdf8ef">
+      <div class="field-label" style="margin-bottom:0.5rem">💡 La IA encontró brechas — ¿tienes experiencia en esto que no mencionaste?</div>
+      <div id="gap-preguntas" style="font-size:0.88rem;color:var(--text);margin-bottom:0.75rem;line-height:1.6"></div>
+      <textarea id="gap-respuesta" placeholder="Si tienes algo relevante que agregar, escríbelo aquí..." style="min-height:80px"></textarea>
+      <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <button class="btn-primary" id="btn-recalc" onclick="recalcularCompatibilidad()" style="background:var(--gold)">
+          <span class="spinner" id="spinner-recalc" style="display:none">⟳</span>
+          ↑ Recalcular compatibilidad con esta info
+        </button>
+        <span style="font-size:12px;color:var(--muted)">Ve si sube tu porcentaje antes de generar el CV</span>
+      </div>
+      <div class="loading-bar" id="loading-recalc"></div>
+      <div class="ai-response" id="ai-recalc"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-primary" id="btn-generar-desde-rol" onclick="generarCVFinal()">
+        <span class="spinner" id="spinner-gen" style="display:none">⟳</span>
+        Generar mi CV optimizado →
+      </button>
+    </div>
+    <div class="loading-bar" id="loading-gen"></div>
+    <div class="ai-response" id="ai-gen"></div>
+  </div>
+</div>
+
+
+<!-- PASO RESUMEN DE CAMBIOS -->
+<div class="section" id="step-resumen">
+  <div class="section-label">Lo que hizo la IA con tu información</div>
+  <h2>Tu CV fue optimizado</h2>
+  <p class="lead">Antes de ver el resultado, aquí está lo que la IA ajustó y por qué.</p>
+  
+  <div id="resumen-loading" style="text-align:center;padding:3rem">
+    <div style="font-size:2rem;margin-bottom:1rem">⏳</div>
+    <p style="color:var(--muted)">Analizando los cambios realizados...</p>
+  </div>
+  
+  <div id="resumen-cards" style="display:none"></div>
+  
+  <div id="resumen-cierre" style="display:none;background:var(--navy);color:white;border-radius:12px;padding:1.5rem;margin-top:1.5rem">
+    <p id="resumen-cierre-texto" style="line-height:1.6;font-size:0.95rem"></p>
+  </div>
+
+  <div class="btn-row" style="margin-top:2rem">
+    <button class="btn-primary" onclick="verCV()" style="font-size:1rem;padding:1rem 2.5rem">
+      Ver mi CV optimizado →
+    </button>
+  </div>
+</div>
+
+<!-- PASO FORMATO -->
+<div class="section" id="step-formato">
+  <div class="section-label">Elige el formato</div>
+  <h2>¿Para qué tipo de empresa vas a aplicar?</h2>
+  <div class="info-box">
+    💡 <strong>¿Sabías esto?</strong> Las empresas grandes usan <strong>ATS (Applicant Tracking System)</strong> — sistemas automáticos que leen tu CV <strong>antes que cualquier persona</strong>. Un CV con columnas, colores o íconos puede ser filtrado sin que nadie te vea.
+  </div>
+  <div class="ats-choice">
+    <div class="ats-option" id="opt-ats" onclick="selectFormat('ats')">
+      <div class="icon">🏢</div>
+      <h3>Empresa grande o corporativa</h3>
+      <p>Multinacionales, bancos, retail grande, gobierno</p>
+      <span class="ats-badge badge-ats">✓ Optimizado para ATS</span>
+    </div>
+    <div class="ats-option" id="opt-visual" onclick="selectFormat('visual')">
+      <div class="icon">✨</div>
+      <h3>Empresa mediana, startup o envío directo</h3>
+      <p>PYMEs, startups, agencias, LinkedIn directo</p>
+      <span class="ats-badge badge-visual">Diseño visual atractivo</span>
+    </div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-secondary" onclick="goTo('rol')">← Volver</button>
+    <button class="btn-primary" id="btn-ver-cv" onclick="verCV()" disabled>Ver mi CV →</button>
+  </div>
+</div>
+
+<!-- PASO CV FINAL -->
+<div class="section" id="step-final">
+  <div class="section-label">Tu CV está listo</div>
+  <h2 id="cv-titulo">CV listo para usar</h2>
+  <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem" id="cv-subtitulo"></p>
+
+  <!-- CV PAGES -->
+  <div class="cv-pages-wrapper" id="cv-pages-wrapper"></div>
+
+  <!-- FEEDBACK -->
+  <div class="card">
+    <div class="card-label">¿Quieres cambiar algo?</div>
+    <div class="field-group">
+      <textarea id="feedback-cv" placeholder="Ej: El resumen suena muy técnico, hazlo más humano. / Resalta más mi experiencia en Microsoft. / Hazlo más directo y concreto..." style="min-height:80px"></textarea>
+    </div>
+    <button class="btn-primary" id="btn-regenerar" onclick="regenerarCV()">
+      <span class="spinner" id="spinner-regen" style="display:none">⟳</span>
+      Aplicar cambios con IA
+    </button>
+    <div class="loading-bar" id="loading-regen"></div>
+    <div class="ai-response" id="ai-regen"></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-gold" onclick="descargarPDF()">⬇ PDF</button>
+    <button class="btn-blue" onclick="descargarWord()">⬇ Word (.doc)</button>
+    <button class="btn-secondary" onclick="goTo('formato')">← Cambiar formato</button>
+    <button class="btn-secondary" onclick="nuevoCV()">Nuevo cargo</button>
+  </div>
+</div>
+
+<script>
+let currentStep='0',cvData=null,selectedFormat=null,expCount=1,expRecienteCount=0,rutaElegida=null,cvUploadData=null,compatData=null;
+
+window.addEventListener('load',()=>{
+  const saved=localStorage.getItem('cv_data_p2');
+  if(!saved)return;
+  const d=JSON.parse(saved);
+  ['nombre','email','telefono','linkedin','educacion','habilidades','idiomas'].forEach(id=>{
+    const el=document.getElementById(id);if(el&&d[id])el.value=d[id];
+  });
+  if(d.experiencias&&d.experiencias[0]){
+    const e=d.experiencias[0],b=document.getElementById('exp-0');
+    b.querySelector('.exp-cargo').value=e.cargo||'';
+    b.querySelector('.exp-empresa').value=e.empresa||'';
+    b.querySelector('.exp-periodo').value=e.periodo||'';
+    b.querySelector('.exp-descripcion').value=e.descripcion||'';
+    b.querySelector('.exp-logro').value=e.logro||'';
+  }
+});
+
+function saveData(){
+  try{
+    const data={
+      nombre:val('nombre'),email:val('email'),telefono:val('telefono'),linkedin:val('linkedin'),
+      cargo:val('cargo-objetivo'),industria:val('industria'),
+      educacion:[...document.querySelectorAll('.edu-item')].map(e=>e.value).filter(Boolean),
+      habilidades:val('habilidades'),habilidades_blandas:document.getElementById('habilidades-blandas')?document.getElementById('habilidades-blandas').value:'',
+      idiomas:[...document.querySelectorAll('.idioma-row')].map(r=>({lang:r.querySelector('.idioma-sel')?.value||'',nivel:r.querySelector('.idioma-nivel')?.value||''})).filter(r=>r.lang),
+      experiencias:getExperiencias()
+    };
+    localStorage.setItem('cv_p2_data', JSON.stringify(data));
+  }catch(e){}
+}
+
+function loadSavedData(){
+  try{
+    const saved=localStorage.getItem('cv_p2_data');
+    if(!saved)return;
+    const data=JSON.parse(saved);
+    if(!data.nombre)return;
+    ['nombre','email','telefono','linkedin','cargo-objetivo','industria','habilidades'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el&&data[id])el.value=data[id];
+    });
+    if(data.habilidades_blandas&&document.getElementById('habilidades-blandas'))
+      document.getElementById('habilidades-blandas').value=data.habilidades_blandas;
+    // Restore education
+    if(data.educacion&&data.educacion.length){
+      const eduItems=document.querySelectorAll('.edu-item');
+      data.educacion.forEach((v,i)=>{
+        if(i<eduItems.length)eduItems[i].value=v;
+        else{agregarEducacion();const items=document.querySelectorAll('.edu-item');if(items[i])items[i].value=v;}
+      });
+    }
+    // Show welcome back message
+    if(data.nombre){
+      const banner=document.createElement('div');
+      banner.style.cssText='background:#fdf8ef;border:1px solid #c9a84c55;border-radius:8px;padding:10px 16px;margin-bottom:16px;font-size:13px;color:var(--gold)';
+      banner.innerHTML='👋 Bienvenida de nuevo, '+data.nombre.split(' ')[0]+'! Tus datos están guardados.';
+      const section=document.getElementById('step-1b');
+      if(section)section.insertBefore(banner,section.firstChild.nextSibling);
+    }
+  }catch(e){}
+}
+
+// Auto-save on input changes
+document.addEventListener('DOMContentLoaded', ()=>{
+  loadSavedData();
+  document.addEventListener('change', saveData);
+  document.addEventListener('blur', saveData, true);
+});
+
+function val(id){const el=document.getElementById(id);return el?el.value:'';}
+function getExperiencias(){return Array.from(document.querySelectorAll('#experiencias-container .exp-block')).map(b=>({cargo:b.querySelector('.exp-cargo').value,empresa:b.querySelector('.exp-empresa').value,periodo:b.querySelector('.exp-periodo').value,descripcion:b.querySelector('.exp-descripcion').value,logro:b.querySelector('.exp-logro').value}));}
+function getExpRecientes(){return Array.from(document.querySelectorAll('#exp-recientes-container .exp-block')).map(b=>({cargo:b.querySelector('.rec-cargo').value,empresa:b.querySelector('.rec-empresa').value,periodo:b.querySelector('.rec-periodo').value,descripcion:b.querySelector('.rec-descripcion').value,logro:b.querySelector('.rec-logro').value})).filter(e=>e.cargo||e.descripcion);}
+
+function goTo(step){
+  const ps=currentStep.toString();
+  const pd=ps.replace(/[abc]/,'');
+  const prev=document.getElementById('step-'+ps);
+  const prevDot=document.getElementById('dot-'+pd);
+  if(prev)prev.classList.remove('active');
+  if(prevDot){prevDot.classList.remove('active');prevDot.classList.add('done');}
+  currentStep=step.toString();
+  const cs=currentStep;
+  const cd=cs.replace(/[abc]/,'');
+  const curr=document.getElementById('step-'+cs);
+  const currDot=document.getElementById('dot-'+cd);
+  if(curr)curr.classList.add('active');
+  if(currDot){currDot.classList.remove('done');currDot.classList.add('active');}
+  window.scrollTo(0,0);
+}
+
+function elegirRuta(ruta){rutaElegida=ruta;goTo(ruta==='upload'?'1a':'1b');}
+
+var cvUploadText='';
+function archivoSeleccionado(input){
+  const file=input.files[0];if(!file)return;
+  document.getElementById('upload-area').classList.add('has-file');
+  document.getElementById('upload-filename').textContent='✓ '+file.name;
+  cvUploadData=file;
+  // Extract text for compatibility analysis
+  if(file.type==='application/pdf'){
+    fileToBase64(file).then(function(b64){
+      cvUploadText='PDF_BASE64:'+b64;
+    }).catch(function(){cvUploadText='';});
+  } else {
+    const reader=new FileReader();
+    reader.onload=function(e){cvUploadText=e.target.result||'';};
+    reader.readAsText(file);
+  }
+}
+
+function irAExpRecientes(){
+  if(!cvUploadData){alert('Por favor sube tu CV primero.');return;}
+  if(!val('cargo-upload').trim()){alert('Por favor indica el cargo al que estás aplicando.');return;}
+  goTo('1c');
+}
+
+function agregarExpReciente(){
+  const c=document.getElementById('exp-recientes-container');
+  const d=document.createElement('div');d.className='exp-block';
+  d.innerHTML=`<h3>Experiencia reciente ${expRecienteCount+1}</h3>
+    <div class="field-group"><label class="field-label">Cargo</label><input type="text" class="rec-cargo" placeholder="Ej: Supervisora de Operaciones"></div>
+    <div class="field-group"><label class="field-label">Empresa</label><input type="text" class="rec-empresa" placeholder="Ej: Amazon"></div>
+    <div class="field-group"><label class="field-label">Período</label><input type="text" class="rec-periodo" placeholder="Ej: 2024 – Presente"></div>
+    <div class="field-group"><label class="field-label">¿Qué hacías?</label><textarea class="rec-descripcion" placeholder="Cuéntamelo con tus palabras..."></textarea></div>
+    <div class="field-group"><label class="field-label">Logros (opcional)</label><textarea class="rec-logro" placeholder="Mejoras o cambios que generaste..."></textarea></div>`;
+  c.appendChild(d);expRecienteCount++;
+}
+
+function validarPaso1(){
+  if(!val('nombre')){alert('Por favor completa tu nombre.');return;}
+  saveData();goTo(2);
+}
+
+function volverDesdeRol(){goTo(rutaElegida==='upload'?'1c':2);}
+
+function saltarAnalisis(){
+  compatData=null;
+  // Show the generate button section first
+  document.getElementById('compat-resultado').style.display='block';
+  document.getElementById('card-gap-extra').style.display='none';
+  document.getElementById('compat-detalle').innerHTML='<p style="color:var(--muted);font-size:0.85rem">Generando tu CV sin análisis de compatibilidad...</p>';
+  document.getElementById('score-circle').textContent='';
+  document.getElementById('score-titulo').textContent='';
+  document.getElementById('score-subtitulo').textContent='';
+  generarCVFinal();
+}
+
+function agregarExperiencia(){
+  const c=document.getElementById('experiencias-container');
+  const d=document.createElement('div');d.className='exp-block';d.id='exp-'+expCount;
+  d.innerHTML=`<h3>Experiencia ${expCount+1}</h3>
+    <div class="field-group"><label class="field-label">Cargo</label><input type="text" class="exp-cargo" placeholder="Ej: Vendedor"></div>
+    <div class="field-group"><label class="field-label">Empresa</label><input type="text" class="exp-empresa" placeholder="Ej: Ripley"></div>
+    <div class="field-group"><label class="field-label">Período</label><input type="text" class="exp-periodo" placeholder="Ej: 2018–2021"></div>
+    <div class="field-group"><label class="field-label">¿Qué hacías?</label><textarea class="exp-descripcion" placeholder="Cuéntamelo con tus palabras..."></textarea></div>
+    <div class="field-group"><label class="field-label">Logros (opcional)</label><textarea class="exp-logro" placeholder="Mejoras o cambios que generaste..."></textarea></div>`;
+  c.appendChild(d);expCount++;
+}
+
+async function analizarCompatibilidad(){
+  const descRol=val('descripcion-rol').trim();
+  if(!descRol){alert('Por favor pega la descripción del cargo primero.');return;}
+  
+  // Check if it's just a URL
+  const isJustURL=/^https?:\/\/\S+$/.test(descRol.trim());
+  if(isJustURL){
+    document.getElementById('ai-rol').innerHTML='<div class="ai-label">Atención</div>Pegaste un link, pero necesito el texto de la descripción del cargo. Ábrelo, selecciona todo el texto y pégalo aquí.';
+    document.getElementById('ai-rol').classList.add('visible');
+    return;
+  }
+  
+  // Clean URLs from text before sending
+  const cleanDesc=descRol.replace(/https?:\/\/\S+/g,'').trim();
+
+  const btn=document.getElementById('btn-analizar');
+  const bar=document.getElementById('loading-rol');
+  const ai=document.getElementById('ai-rol');
+  btn.disabled=true;document.getElementById('spinner-rol').style.display='inline-block';bar.classList.add('active');
+  ai.innerHTML='<div class="ai-label">Analizando</div>Comparando tu perfil con el cargo...';ai.classList.add('visible');
+
+  const cargo=val('cargo-upload')||val('cargo-objetivo');
+  const perfilResumen=rutaElegida==='upload'
+    ?(cvUploadText&&!cvUploadText.startsWith('PDF_BASE64')
+      ?cvUploadText.slice(0,2000)
+      :`CV del candidato para el cargo: ${cargo}. Industria: ${val('industria-upload')}.`)
+    :`Experiencias: ${getExperiencias().map(e=>`${e.cargo} en ${e.empresa}: ${e.descripcion}`).join(' | ')}. Educación: ${val('educacion')}. Habilidades: ${val('habilidades')}.`;
+
+  const prompt=`Eres un experto en reclutamiento. Analiza la compatibilidad entre el perfil del candidato y la descripción del cargo.
+
+PERFIL DEL CANDIDATO:
+${perfilResumen}
+
+DESCRIPCIÓN DEL CARGO:
+${cleanDesc}
+
+Responde SOLO en JSON sin markdown:
+{
+  "puntaje": 75,
+  "fortalezas": ["fortaleza 1 concreta", "fortaleza 2"],
+  "brechas": ["brecha 1 concreta", "brecha 2"],
+  "preguntas_gap": ["¿En algún momento tuviste que hacer X?", "¿Tienes experiencia con Y aunque no esté en tu CV?"],
+  "consejo": "Consejo corto de 1-2 líneas sobre cómo presentar tu perfil para este rol"
+}
+Sé específico y honesto. Máximo 3 fortalezas, 3 brechas y 2 preguntas.`;
+
+  try{
+    const res=await fetch('/.netlify/functions/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:800,messages:(cvUploadText&&cvUploadText.startsWith('PDF_BASE64'))?[{role:'user',content:[{type:'document',source:{type:'base64',media_type:'application/pdf',data:cvUploadText.slice(11)}},{type:'text',text:prompt}]}]:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    const text=data.content.map(c=>c.text||'').join('');
+    compatData=JSON.parse(text.replace(/```json|```/g,'').trim());
+    ai.style.display='none';
+    mostrarCompatibilidad(compatData);
+  }catch(err){
+    ai.innerHTML='<div class="ai-label" style="color:red">Error</div>Hubo un problema. Puedes saltar este paso.';
+  }finally{btn.disabled=false;document.getElementById('spinner-rol').style.display='none';bar.classList.remove('active');}
+}
+
+function mostrarCompatibilidad(data){
+  const score=data.puntaje||0;
+  const circle=document.getElementById('score-circle');
+  if(!circle){console.error('score-circle not found');return;}
+  circle.textContent=score+'%';
+  circle.className='score-circle '+(score>=70?'score-high':score>=50?'score-mid':'score-low');
+  const scoreTit=document.getElementById('score-titulo');
+  if(scoreTit)scoreTit.textContent=score>=70?'Buena compatibilidad':score>=50?'Compatibilidad moderada':'Compatibilidad baja';
+  const scoreSub=document.getElementById('score-subtitulo');
+  if(scoreSub)scoreSub.textContent=data.consejo||'';
+
+  let html='';
+  if(data.fortalezas&&data.fortalezas.length){
+    html+=`<div class="compat-section"><h4>✓ Lo que tienes a favor</h4>${data.fortalezas.map(f=>`<div class="compat-item"><span class="compat-ok">✓</span><span>${f}</span></div>`).join('')}</div>`;
+  }
+  if(data.brechas&&data.brechas.length){
+    html+=`<div class="compat-section"><h4>△ Brechas identificadas</h4>${data.brechas.map(b=>`<div class="compat-item"><span class="compat-gap">△</span><span>${b}</span></div>`).join('')}</div>`;
+  }
+  document.getElementById('compat-detalle').innerHTML=html;
+
+  if(data.preguntas_gap&&data.preguntas_gap.length){
+    document.getElementById('gap-preguntas').innerHTML=data.preguntas_gap.map(p=>`<div class="compat-item"><span class="compat-question">→</span><span>${p}</span></div>`).join('');
+    const gapCard=document.getElementById('card-gap-extra');
+    if(gapCard)gapCard.style.display='block';
+    const btnRecalc=document.getElementById('btn-recalc');
+    if(btnRecalc)btnRecalc.style.display='inline-flex';
+  }
+
+  const compatRes=document.getElementById('compat-resultado');
+  if(compatRes){compatRes.style.display='block';compatRes.scrollIntoView({behavior:'smooth',block:'start'});}
+}
+
+async function recalcularCompatibilidad(){
+  const infoExtra=val('gap-respuesta')||'';
+  if(!infoExtra.trim()){alert('Por favor escribe la información adicional primero.');return;}
+  const btn=document.getElementById('btn-recalc');
+  if(btn){btn.disabled=true;btn.innerHTML='⧗ Recalculando...';}
+  const descRol=(val('descripcion-rol')||'').replace(/https?:\/\/\S+/g,'').trim().slice(0,1200);
+  const cargo=val('cargo-upload')||val('cargo-objetivo');
+  var expList=getExperiencias().map(function(e){return e.cargo+' en '+e.empresa;}).join(', ');
+  var expResumen=rutaElegida==='upload'?('CV subido. Info adicional: '+infoExtra.slice(0,400)):('Experiencias: '+expList+'. Info adicional: '+infoExtra.slice(0,400));
+  var promptText='Eres experto en reclutamiento. El candidato agrego nueva informacion. Recalcula la compatibilidad. PERFIL: '+expResumen+' CARGO: '+descRol+' Responde SOLO JSON sin markdown: {"puntaje":75,"fortalezas":["f1"],"brechas":["b1"],"preguntas_gap":["p"],"consejo":"c"}';
+  try{
+    const res=await fetch('/.netlify/functions/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:600,messages:[{role:'user',content:promptText}]})});
+    const data=await res.json();
+    const text=data.content.map(function(c){return c.text||'';}).join('');
+    const newData=JSON.parse(text.replace(/```json|```/g,'').trim());
+    compatData=newData;
+    mostrarCompatibilidad(newData);
+    const msg=document.getElementById('recalc-msg');
+    if(msg){msg.textContent='✓ Compatibilidad actualizada a '+newData.puntaje+'%';msg.style.color='green';msg.style.display='block';}
+  }catch(err){
+    alert('Error al recalcular. Intenta de nuevo.');
+  }finally{
+    if(btn){btn.disabled=false;btn.innerHTML='↑ Recalcular compatibilidad con esta info';}
+  }
+}
+
+async function generarCVFinal(){
+  const cargo=val('cargo-upload')||val('cargo-objetivo');
+  const industria=val('industria-upload')||val('industria');
+  const idioma=val('idioma-upload')||val('idioma-manual')||'español';
+  const perfilP1=val('perfil-p1-upload')||val('perfil-p1-manual');
+  const descRol=val('descripcion-rol');
+  const gapExtra=val('gap-respuesta');
+
+  const btn=document.getElementById('btn-generar-desde-rol');
+  const bar=document.getElementById('loading-gen');
+  const ai=document.getElementById('ai-gen');
+  if(btn){btn.disabled=true;document.getElementById('spinner-gen').style.display='inline-block';}
+  bar.classList.add('active');
+  ai.innerHTML='<div class="ai-label">Generando</div>Creando tu CV optimizado...';ai.classList.add('visible');
+
+  const descRolClean=descRol.replace(/https?:\/\/\S+/g,'').trim();
+  const rolText=descRolClean?`\n\nDESCRIPCIÓN DEL CARGO:\n${descRolClean}\nOptimiza el CV para este rol usando sus palabras clave.`:'';
+  const onePage=`\n\nREGLA: El CV debe caber en UNA SOLA PÁGINA. Máximo 3 experiencias (las más relevantes), 2-3 bullets cada una, resumen de 2 líneas. Omite lo que no suma para "${cargo}".`;
+  const compatText=compatData?`\n\nCOMPATIBILIDAD: Fortalezas: ${compatData.fortalezas?.join(', ')}. Brechas: ${compatData.brechas?.join(', ')}. Destaca fortalezas, minimiza brechas.`:'';
+  const gapText=gapExtra?`\n\nINFO ADICIONAL: ${gapExtra}. Incorpora si es relevante.`:'';
+  const p1Text=perfilP1?`\n\nPERFIL AUTOCONOCIMIENTO: ${perfilP1}. Úsalo para enriquecer el resumen.`:'';
+
+  try{
+    let messages;
+    if(rutaElegida==='upload'&&cvUploadData){
+      const ispdf=cvUploadData.type==='application/pdf';
+      if(ispdf){
+        const base64=await fileToBase64(cvUploadData);
+        const expRec=getExpRecientes();
+        const expRecText=expRec.length>0?`\n\nEXPERIENCIAS RECIENTES NO EN EL CV:\n${expRec.map(e=>`${e.cargo} en ${e.empresa} (${e.periodo}): ${e.descripcion}. Logros: ${e.logro||'N/A'}`).join('\n')}. Inclúyelas en el CV.`:'';
+        messages=[{role:'user',content:[{type:'document',source:{type:'base64',media_type:'application/pdf',data:base64}},{type:'text',text:`Eres experto en RRHH. Cargo objetivo: "${cargo}". Industria: "${industria}". Idioma del CV: ${idioma}.${rolText}${onePage}${compatText}${gapText}${p1Text}${expRecText}\n\nLee el CV y responde SOLO en JSON sin markdown:\n{"nombre":"","email":"","telefono":"","linkedin":"","cargo_objetivo":"${cargo}","resumen":"resumen 2-3 líneas adaptado al cargo","experiencias":[{"cargo":"","empresa":"","periodo":"","bullets":["logro 1","logro 2","logro 3"]}],"educacion":"","habilidades":"","idiomas":""}`}]}];
+      }else{
+        const text=await fileToText(cvUploadData);
+        const expRec=getExpRecientes();
+        const expRecText=expRec.length>0?`\n\nEXPERIENCIAS RECIENTES: ${expRec.map(e=>`${e.cargo} en ${e.empresa}: ${e.descripcion}`).join(' | ')}.`:'';
+        messages=[{role:'user',content:`Eres experto en RRHH. Cargo: "${cargo}". Industria: "${industria}". Idioma: ${idioma}.${rolText}${onePage}${compatText}${gapText}${p1Text}${expRecText}\n\nCV:\n${text}\n\nResponde SOLO en JSON sin markdown:\n{"nombre":"","email":"","telefono":"","linkedin":"","cargo_objetivo":"${cargo}","resumen":"","experiencias":[{"cargo":"","empresa":"","periodo":"","bullets":["logro 1","logro 2"]}],"educacion":"","habilidades":"","idiomas":""}`}];
+      }
+    }else{
+      const expTexto=getExperiencias().map((e,i)=>`Exp ${i+1}: ${e.cargo} en ${e.empresa} (${e.periodo}): ${e.descripcion}. Logros: ${e.logro||'N/A'}`).join('\n');
+      messages=[{role:'user',content:`Eres experto en RRHH. Cargo: "${cargo}". Industria: "${industria}". Idioma: ${idioma}.${rolText}${onePage}${compatText}${gapText}${p1Text}\n\nExperiencias:\n${expTexto}\nEducación: ${val('educacion')}. Habilidades: ${val('habilidades')}. Idiomas: ${val('idiomas')}.\n\nResponde SOLO en JSON sin markdown:\n{"resumen":"","experiencias":[{"cargo":"","empresa":"","periodo":"","bullets":["logro1","logro2","logro3"]}]}`}];
+    }
+
+    const res=await fetch('/.netlify/functions/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:2000,messages})});
+    const data=await res.json();
+    const text2=data.content.map(c=>c.text||'').join('');
+    cvData=JSON.parse(text2.replace(/```json|```/g,'').trim());
+    ['nombre','email','telefono','linkedin','educacion','habilidades','idiomas'].forEach(id=>{
+      const el=document.getElementById(id);if(el&&cvData[id])el.value=cvData[id];
+    });
+    document.getElementById('cargo-objetivo').value=cargo;
+    document.getElementById('industria').value=industria;
+    ai.innerHTML='<div class="ai-label">✓ Listo</div>CV generado. Elige el formato.';
+    setTimeout(()=>{goTo('resumen');generarResumen();},700);
+  }catch(err){
+    console.error(err);
+    ai.innerHTML='<div class="ai-label" style="color:red">Error</div>Hubo un problema. Intenta de nuevo.';
+  }finally{if(btn){btn.disabled=false;document.getElementById('spinner-gen').style.display='none';}bar.classList.remove('active');}
+}
+
+function fileToBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file);});}
+function fileToText(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsText(file);});}
+
+function selectFormat(f){
+  selectedFormat=f;
+  ['ats','visual'].forEach(x=>document.getElementById('opt-'+x).classList.remove('selected'));
+  document.getElementById('opt-'+f).classList.add('selected');
+  document.getElementById('btn-ver-cv').disabled=false;
+  document.getElementById('btn-ver-cv').textContent=f==='ats'?'Ver CV para ATS →':'Ver CV visual →';
+}
+
+function verCV(){renderCV();goTo('final');}
+
+function buildATSPage(nombre,email,telefono,linkedin,educacion,habilidades,idiomas){
+  const linkedinDisplay=linkedin?(linkedin.startsWith('http')?linkedin:'https://'+linkedin):null;
+  const contactParts=[email,telefono,linkedinDisplay].filter(Boolean);
+  const expHtml=cvData.experiencias.map(e=>`<div style="margin-bottom:7pt;page-break-inside:avoid"><div class="cv-job-title">${e.cargo}</div><div class="cv-company">${e.empresa} | ${e.periodo}</div><ul>${e.bullets.map(b=>`<li>${b}</li>`).join('')}</ul></div>`).join('');
+  return `<div class="cv-page ats-page">
+    <div class="cv-name">${nombre}</div>
+    <div class="cv-contact">${contactParts.join(' · ')}</div>
+    <div class="cv-section"><div class="cv-summary">${cvData.resumen}</div></div>
+    <div class="cv-section"><div class="cv-section-title">Experiencia Profesional</div>${expHtml}</div>
+    ${educacion?`<div class="cv-section"><div class="cv-section-title">Educación</div><div style="font-size:9pt">${educacion}</div></div>`:''}
+    ${habilidades?`<div class="cv-section"><div class="cv-section-title">Habilidades</div><div style="font-size:9pt">${habilidades}</div></div>`:''}
+    ${idiomas?`<div class="cv-section"><div class="cv-section-title">Idiomas</div><div style="font-size:9pt">${idiomas}</div></div>`:''}
+  </div>`;
+}
+
+function buildVisualPage(nombre,email,telefono,linkedin,cargo,educacion,habilidades,idiomas){
+  const linkedinDisplay=linkedin?(linkedin.startsWith('http')?linkedin:'https://'+linkedin):null;
+  const contactItems=[email,telefono,linkedinDisplay].filter(Boolean).join(' · ');
+  const expHtml=cvData.experiencias.map(e=>`<div style="margin-bottom:8pt;page-break-inside:avoid"><div class="vis-job-title">${e.cargo}</div><div class="vis-company">${e.empresa} · ${e.periodo}</div><ul>${e.bullets.map(b=>`<li>${b}</li>`).join('')}</ul></div>`).join('');
+  const skillTags=habilidades?habilidades.split(',').map(s=>`<span style="display:inline-block;font-size:7.5pt;background:#f0f4ff;border:0.5pt solid #d0d9ff;border-radius:3pt;padding:1pt 5pt;margin:1pt">${s.trim()}</span>`).join(''):'';
+  return `<div class="cv-page vis-page">
+    <div class="vis-header">
+      <div class="vis-name">${nombre}</div>
+      <div class="vis-title-role">${cargo}</div>
+      <div class="vis-contact-row">${contactItems}</div>
+    </div>
+    <div class="vis-body">
+      <div class="vis-section"><div class="vis-section-title">Perfil Profesional</div><div class="vis-summary">${cvData.resumen}</div></div>
+      <div class="vis-section"><div class="vis-section-title">Experiencia</div>${expHtml}</div>
+      ${educacion?`<div class="vis-section"><div class="vis-section-title">Educación</div><div style="font-size:9pt">${educacion}</div></div>`:''}
+      ${skillTags?`<div class="vis-section"><div class="vis-section-title">Habilidades</div><div>${skillTags}</div></div>`:''}
+      ${idiomas?`<div class="vis-section"><div class="vis-section-title">Idiomas</div><div style="font-size:9pt">${idiomas}</div></div>`:''}
+    </div>
+  </div>`;
+}
+
+function renderCV(){
+  if(!cvData)return;
+  // Sync contact fields from cvData to HTML inputs if present
+  if(cvData.nombre) document.getElementById('nombre').value=cvData.nombre;
+  if(cvData.email) document.getElementById('email').value=cvData.email;
+  if(cvData.telefono) document.getElementById('telefono').value=cvData.telefono;
+  if(cvData.linkedin) document.getElementById('linkedin').value=cvData.linkedin;
+  if(cvData.educacion) document.getElementById('educacion').value=cvData.educacion;
+  if(cvData.habilidades) document.getElementById('habilidades').value=cvData.habilidades;
+  if(cvData.idiomas) document.getElementById('idiomas').value=cvData.idiomas;
+
+  const nombre=val('nombre'),email=val('email'),telefono=val('telefono'),linkedin=val('linkedin');
+  const educacion=val('educacion'),habilidades=val('habilidades'),idiomas=val('idiomas'),cargo=val('cargo-objetivo');
+  const wrapper=document.getElementById('cv-pages-wrapper');
+  if(selectedFormat==='ats'){
+    document.getElementById('cv-titulo').textContent='CV optimizado para ATS';
+    document.getElementById('cv-subtitulo').textContent='Formato limpio para empresas grandes con sistemas automáticos.';
+    wrapper.innerHTML=buildATSPage(nombre,email,telefono,linkedin,educacion,habilidades,idiomas);
+  }else{
+    document.getElementById('cv-titulo').textContent='CV con diseño visual';
+    document.getElementById('cv-subtitulo').textContent='Para empresas medianas, startups o envío directo a un reclutador.';
+    wrapper.innerHTML=buildVisualPage(nombre,email,telefono,linkedin,cargo,educacion,habilidades,idiomas);
+  }
+  // scroll to top of preview
+  wrapper.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+async function regenerarCV(){
+  const feedback=val('feedback-cv').trim();
+  if(!feedback){alert('Escribe qué quieres cambiar primero.');return;}
+  const btn=document.getElementById('btn-regenerar');
+  const bar=document.getElementById('loading-regen');
+  const ai=document.getElementById('ai-regen');
+  btn.disabled=true;document.getElementById('spinner-regen').style.display='inline-block';bar.classList.add('active');
+  ai.innerHTML='<div class="ai-label">Aplicando cambios</div>Ajustando tu CV...';ai.classList.add('visible');
+  const prompt=`Tienes este CV en JSON:\n${JSON.stringify(cvData)}\n\nEl usuario pide estos cambios EXACTOS: "${feedback}"\n\nIMPORTANTE:\n- Aplica los cambios literalmente y de forma completa\n- Si pide cambiar el LinkedIn, email, teléfono u otro dato de contacto, actualízalo exactamente como lo especifica\n- Si pide cambiar el tono, cámbialo en TODOS los textos\n- El JSON devuelto debe incluir SIEMPRE todos los campos: nombre, email, telefono, linkedin, cargo_objetivo, resumen, experiencias, educacion, habilidades, idiomas\n- Devuelve el CV completo actualizado. SOLO JSON sin markdown, misma estructura exacta.`;
+  try{
+    const res=await fetch('/.netlify/functions/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:2000,messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    const text=data.content.map(c=>c.text||'').join('');
+    cvData=JSON.parse(text.replace(/```json|```/g,'').trim());
+    document.getElementById('feedback-cv').value='';
+    renderCV();
+    ai.innerHTML='<div class="ai-label">✓ Listo</div>CV actualizado. Revisa el preview arriba.';
+  }catch(err){ai.innerHTML='<div class="ai-label" style="color:red">Error</div>Intenta de nuevo.';}
+  finally{btn.disabled=false;document.getElementById('spinner-regen').style.display='none';bar.classList.remove('active');}
+}
+
+function getPageEl(){
+  return document.querySelector('#cv-pages-wrapper .cv-page');
+}
+
+function descargarPDF(){
+  const el=getPageEl();if(!el)return;
+  const nombre=val('nombre').replace(/\s+/g,'_')||'CV';
+  const isATS=selectedFormat==='ats';
+  const printWin=window.open('','_blank');
+  const cvStyles=isATS?`
+    body{font-family:Arial,sans-serif;font-size:10pt;line-height:1.4;color:#111;margin:1.8cm 2cm}
+    .cv-name{font-size:17pt;font-weight:700;margin-bottom:2pt}
+    .cv-contact{font-size:8.5pt;color:#444;border-bottom:1pt solid #111;padding-bottom:5pt;margin-bottom:8pt}
+    .cv-summary{font-size:9pt;font-style:italic;color:#333;margin-bottom:8pt}
+    .cv-section{margin-bottom:8pt;page-break-inside:avoid}
+    .cv-section-title{font-size:8.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.08em;border-bottom:.5pt solid #888;padding-bottom:1pt;margin-bottom:5pt}
+    .cv-job-title{font-weight:700;font-size:9.5pt}
+    .cv-company{font-size:8.5pt;color:#555;margin-bottom:2pt}
+    ul{padding-left:12pt;margin:0 0 5pt}
+    li{font-size:9pt;margin-bottom:1pt;page-break-inside:avoid}
+  `:`
+    body{margin:0;padding:0;font-family:Arial,sans-serif}
+    .vis-header{background:#1a1f3a;color:white;padding:1cm 1.5cm .7cm}
+    .vis-name{font-size:18pt;font-weight:700;color:white;margin-bottom:3pt}
+    .vis-title-role{font-size:8.5pt;color:#c9a84c;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6pt}
+    .vis-contact-row{font-size:8pt;color:rgba(255,255,255,.75)}
+    .vis-body{padding:.7cm 1.5cm}
+    .vis-section{margin-bottom:10pt;page-break-inside:avoid}
+    .vis-section-title{font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#c9a84c;border-bottom:.5pt solid #e5e0d8;padding-bottom:2pt;margin-bottom:6pt}
+    .vis-summary{font-size:9pt;font-style:italic;color:#444;line-height:1.4}
+    .vis-job-title{font-weight:700;font-size:9.5pt;color:#1a1f3a}
+    .vis-company{font-size:8.5pt;color:#666;margin-bottom:2pt}
+    ul{padding-left:12pt;margin:0 0 5pt}
+    li{font-size:9pt;margin-bottom:1pt;color:#222;page-break-inside:avoid}
+  `;
+  printWin.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <style>${cvStyles}
+  @page{size:letter;margin:0}
+  @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  .cv-section,.vis-section{page-break-inside:avoid}}</style>
+  </head><body>${el.innerHTML}</body></html>`);
+  printWin.document.close();
+  printWin.onload=()=>{setTimeout(()=>{printWin.print();printWin.close();},600);};
+}
+
+function descargarWord(){
+  if(!cvData)return;
+  const nombre=val('nombre'),email=val('email'),telefono=val('telefono'),linkedin=val('linkedin');
+  const educacion=val('educacion'),habilidades=val('habilidades'),idiomas=val('idiomas');
+  const linkedinDisplay=linkedin?(linkedin.startsWith('http')?linkedin:'https://'+linkedin):null;
+  const contactLine=[email,telefono,linkedinDisplay].filter(Boolean).join(' · ');
+  const expHtml=cvData.experiencias.map(e=>`
+    <p style="margin:0 0 1pt"><b style="font-size:10.5pt">${e.cargo}</b></p>
+    <p style="margin:0 0 4pt;color:#555;font-size:9pt"><i>${e.empresa} | ${e.periodo}</i></p>
+     <ul style="margin:0 0 10pt;padding-left:16pt">${e.bullets.map(b=>`<li style="font-size:9.5pt;margin-bottom:2pt">${b}</li>`).join('')}</ul>`).join('');
+  const wordContent=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="UTF-8">
+  <style>
+  @page{size:8.5in 11in;margin:1.8cm 2cm}
+  body{font-family:Arial,sans-serif;font-size:10.5pt;color:#111;line-height:1.4}
+  h1{font-size:18pt;font-weight:700;margin:0 0 3pt}
+  .contact{font-size:9pt;color:#444;border-bottom:1pt solid #111;padding-bottom:5pt;margin-bottom:10pt}
+  .summary{font-style:italic;font-size:9.5pt;color:#333;margin-bottom:12pt}
+  h2{font-size:8.5pt;font-weight:700;text-transform:uppercase;letter-spacing:1pt;border-bottom:.5pt solid #888;padding-bottom:2pt;margin:12pt 0 5pt}
+  </style></head><body>
+  <h1>${nombre}</h1>
+  <div class="contact">${contactLine}</div>
+  <div class="summary">${cvData.resumen}</div>
+  <h2>Experiencia Profesional</h2>${expHtml}
+  ${educacion?`<h2>Educación</h2><p style="font-size:9.5pt;margin:0">${educacion}</p>`:''}
+  ${habilidades?`<h2>Habilidades</h2><p style="font-size:9.5pt;margin:0">${habilidades}</p>`:''}
+  ${idiomas?`<h2>Idiomas</h2><p style="font-size:9.5pt;margin:0">${idiomas}</p>`:''}
+  </body></html>`;
+  const blob=new Blob(['\ufeff'+wordContent],{type:'application/msword;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`CV_${nombre.replace(/\s+/g,'_')}.doc`;
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+async function generarResumen(){
+  const loadingEl=document.getElementById('resumen-loading');
+  const cardsEl=document.getElementById('resumen-cards');
+  const cierreEl=document.getElementById('resumen-cierre');
+  const cierreTexto=document.getElementById('resumen-cierre-texto');
+  if(!loadingEl)return;
+  loadingEl.style.display='block';
+  if(cardsEl)cardsEl.style.display='none';
+  if(cierreEl)cierreEl.style.display='none';
+
+  const cargo=val('cargo-upload')||val('cargo-objetivo')||'el cargo objetivo';
+  const cvJson=cvData?JSON.stringify({resumen:cvData.resumen,experiencias:(cvData.experiencias||[]).map(e=>({cargo:e.cargo,empresa:e.empresa,bullets:(e.bullets||[]).slice(0,2)}))}):'{}';
+  const compatInfo=compatData?'Compatibilidad: '+compatData.puntaje+'%. Brechas: '+(compatData.brechas||[]).join(', '):'Sin análisis de compatibilidad.';
+  
+  const prompt='Eres experto en RRHH. Acabas de optimizar un CV para el cargo "'+cargo+'". '+compatInfo+'.\n\nCV generado (resumen): '+cvJson.slice(0,800)+'\n\nCrea un resumen HONESTO de qué hiciste. Responde SOLO en JSON sin markdown:\n{"cambios":[{"tipo":"quité","titulo":"Lo que eliminé","descripcion":"explicación concreta de qué y por qué"},{"tipo":"reescribí","titulo":"Lo que mejoré","descripcion":"qué reescribí y cómo quedó mejor"},{"tipo":"agregué","titulo":"Lo que potencié","descripcion":"qué información se destacó más"},{"tipo":"organicé","titulo":"Cómo lo estructuré","descripcion":"decisiones de formato y estructura"}],"cierre":"Mensaje motivador honesto de 2-3 oraciones explicando el resultado final. Si el puntaje de compatibilidad mejoró, menciónalo. Habla en español siempre."}\nSé específico y honesto. Responde SIEMPRE en español.';
+
+  try{
+    const res=await fetch('/.netlify/functions/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:800,messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    const text=data.content.map(c=>c.text||'').join('');
+    const parsed=JSON.parse(text.replace(/```json|```/g,'').trim());
+    
+    const iconMap={quité:'✂️',reescribí:'✏️',agregué:'✨',organicé:'📋'};
+    const colorMap={quité:'#fee2e2',reescribí:'#fef3c7',agregué:'#d1fae5',organicé:'#dbeafe'};
+    
+    if(cardsEl){
+      cardsEl.innerHTML=(parsed.cambios||[]).map(c=>{
+        const ico=iconMap[c.tipo]||'•';
+        const bg=colorMap[c.tipo]||'#f3f4f6';
+        return '<div style="background:'+bg+';border-radius:10px;padding:1.2rem;margin-bottom:1rem"><div style="font-size:1.1rem;font-weight:600;margin-bottom:0.3rem">'+ico+' '+c.titulo+'</div><p style="font-size:0.9rem;color:#374151;line-height:1.5">'+c.descripcion+'</p></div>';
+      }).join('');
+      cardsEl.style.display='block';
+    }
+    if(cierreEl&&cierreTexto){
+      cierreTexto.textContent=parsed.cierre||'';
+      cierreEl.style.display='block';
+    }
+  }catch(err){
+    if(cardsEl){
+      cardsEl.innerHTML='<div style="background:#fef3c7;border-radius:10px;padding:1.2rem"><p style="color:#92400e">Tu CV fue optimizado para el cargo. Haz clic en "Ver mi CV optimizado" para verlo.</p></div>';
+      cardsEl.style.display='block';
+    }
+  }finally{
+    if(loadingEl)loadingEl.style.display='none';
+  }
+}
+
+function agregarEducacion(){
+  var container=document.getElementById('educacion-container');
+  var div=document.createElement('div');
+  div.className='edu-entry';
+  div.style.cssText='display:flex;gap:0.5rem;margin-bottom:0.5rem';
+  div.innerHTML='<input type="text" class="edu-input" placeholder="Ej: MBA – Universidad, año" style="flex:1"><button type="button" onclick="this.parentNode.remove()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:1.2rem;padding:0 0.3rem">×</button>';
+  container.appendChild(div);
+}
+
+function agregarIdioma(){
+  var container=document.getElementById('idiomas-container');
+  var div=document.createElement('div');
+  div.className='idioma-entry';
+  div.style.cssText='display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem';
+  div.innerHTML='<select class="idioma-select" style="flex:2;padding:0.6rem;border:1.5px solid var(--border);border-radius:8px;font-family:inherit"><option value="">Selecciona idioma</option><option>Español</option><option>Inglés</option><option>Francés</option><option>Portugués</option><option>Alemán</option><option>Italiano</option><option>Chino (Mandarín)</option><option>Árabe</option><option>Otro</option></select><select class="nivel-select" style="flex:2;padding:0.6rem;border:1.5px solid var(--border);border-radius:8px;font-family:inherit"><option value="">Nivel</option><option>Nativo / C2</option><option>Avanzado / C1</option><option>Intermedio alto / B2</option><option>Intermedio / B1</option><option>Básico / A2</option></select><button type="button" onclick="this.parentNode.remove()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:1.2rem;padding:0 0.3rem">×</button>';
+  container.appendChild(div);
+}
+
+function consolidarCampos(){
+  // Consolidate educacion entries
+  var eduInputs=document.querySelectorAll('.edu-input');
+  var eduVals=[];
+  eduInputs.forEach(function(i){if(i.value.trim())eduVals.push(i.value.trim());});
+  var eduField=document.getElementById('educacion');
+  if(eduField)eduField.value=eduVals.join(' | ');
+  // Consolidate idiomas entries
+  var idiomaEntries=document.querySelectorAll('.idioma-entry');
+  var idiomaVals=[];
+  idiomaEntries.forEach(function(entry){
+    var lang=entry.querySelector('.idioma-select');
+    var nivel=entry.querySelector('.nivel-select');
+    if(lang&&lang.value&&nivel&&nivel.value)idiomaVals.push(lang.value+' – '+nivel.value);
+  });
+  var idiomasField=document.getElementById('idiomas');
+  if(idiomasField)idiomasField.value=idiomaVals.join(' | ');
+}
+
+function nuevoCV(){
+}
+  ['cargo-objetivo','industria','cargo-upload','industria-upload','descripcion-rol','gap-respuesta','feedback-cv'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  cvData=null;compatData=null;selectedFormat=null;cvUploadData=null;expRecienteCount=0;
+  document.getElementById('exp-recientes-container').innerHTML='';
+  document.getElementById('compat-resultado').style.display='none';
+  document.getElementById('card-gap-extra').style.display='none';
+  ['opt-ats','opt-visual'].forEach(id=>document.getElementById(id).classList.remove('selected'));
+  document.getElementById('btn-ver-cv').disabled=true;
+  document.getElementById('upload-area').classList.remove('has-file');
+  document.getElementById('upload-filename').textContent='';
+  document.getElementById('file-input').value='';
+  goTo(0);
+}
+</script>
+</body>
+</html>
